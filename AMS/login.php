@@ -75,7 +75,7 @@
       /* Add media queries for responsiveness */
       @media screen and (max-width: 600px) {
         form {
-          width: 70%;
+          width: 80%;
         }
       }
     </style>
