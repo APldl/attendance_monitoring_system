@@ -11,6 +11,9 @@
     <title>Login</title>
     <style>
       /* Center the form container */
+      label {
+        font-family:sans-serif;
+      }
       .container {
         display: flex;
         justify-content: center;
@@ -66,7 +69,8 @@
       }
 
       h2 {
-      	font-size: 22px;
+        font-family:sans-serif;
+        font-size: 20px;
       	display: flex;
       	justify-content: center;
 

@@ -11,6 +11,9 @@
     <title>Login</title>
     <style>
       /* Center the form container */
+      label {
+        font-family:sans-serif;
+      }
       .container {
         display: flex;
         justify-content: center;
@@ -66,7 +69,8 @@
       }
 
       h2 {
-      	font-size: 22px;
+        font-family:sans-serif;
+      	font-size: 20px;
       	display: flex;
       	justify-content: center;
 
@@ -104,7 +108,7 @@
       	<img src="https://signin.apc.edu.ph/images/logo.png" width="120px">
       	</div>
         <div class="alert alert-danger invalid-credentials" align="center" role="alert">
-                    Invalid Email / Password.
+                    Invalid Email or Password.
         </div>
         <h2>Attendance Monitoring System</h2>
         <label for="username"><b>Username</b></label>
