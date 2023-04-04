@@ -6,7 +6,7 @@
       /* Style the form container */
       .form-container {
         margin: auto;
-        width: 35%;
+        width: 40%;
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 10px;
