@@ -31,7 +31,7 @@
         padding: 14px 20px;
         margin: 8px 0;
         border: none;
-        border-radius: 4px;
+        border-radius: 2px;
         cursor: pointer;
       }
       
@@ -80,7 +80,7 @@
         <div class="submit">
           <input type="submit" value="Login">
         </div>
-        
+
       </form>
     </div>
   </body>
