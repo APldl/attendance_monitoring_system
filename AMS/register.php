@@ -55,21 +55,21 @@
   <body>
     <div class="form-container">
       <h2>Registration Form</h2>
-      <form action="#" method="post">
+      <form action="register_function.php" method="post">
         <label for="fullname">Full Name</label>
-        <input type="text" id="fullname" name="fullname" required>
+        <input type="text" id="user_fullname" name="user_fullname" required>
         
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <label for="user_email">Email</label>
+        <input type="email" id="user_email" name="user_email" required>
         
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="user_password" name="user_password" required>
         
-        <label for="confirm-password">Confirm Password</label>
-        <input type="password" id="confirm-password" name="confirm-password" required>
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
         
         <label for="user-role">User Role</label>
-        <select id="user-role" name="user-role">
+        <select id="role_id" name="role_id">
           <option value="1">Faculty</option>
           <option value="2">Attendance Checker</option>
           <option value="3">Faculty Encoder</option>
@@ -78,9 +78,8 @@
         </select>
         
         <div class="submit">
-          <input type="submit" value="Login">
+          <input type="submit" value="Register">
         </div>
-
       </form>
     </div>
   </body>
