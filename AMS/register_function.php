@@ -35,8 +35,6 @@
             '".$role_id."'
           )";
 
-    mysqli_query($conn, $sql);
-
     $exist = "
         SELECT 
           * 
@@ -60,6 +58,7 @@
     else {
       //original email
       //header('Location: ../register.php?origemail=false');
+      mysqli_query($conn, $sql);
       header('Location: login.php');
     }
 
