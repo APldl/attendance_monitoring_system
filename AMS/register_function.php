@@ -7,9 +7,6 @@
   $user_password = $_POST['user_password']; //MD5 encryption
   $confirm_password = $_POST['confirm_password']; //MD5 encryption
   $role_id = $_POST['role_id'];
-
-
-
   //Make first name and last name first letter capitalized
   //$first_name = ucfirst($first_name);
   //$last_name = ucfirst($last_name);
