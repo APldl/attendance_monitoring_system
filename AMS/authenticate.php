@@ -27,7 +27,8 @@
 
 
     if($_SESSION['user_role'] == 1){
-      header('Location: dashboard_faculty.php');
+      //header('Location: dashboard_faculty.php');
+      header('Location: Faculty_Member/try.php');
     }else if($_SESSION['user_role'] == 2){
       header('Location: dashboard_attendance_checker.php');
     }else if($_SESSION['user_role'] == 3){

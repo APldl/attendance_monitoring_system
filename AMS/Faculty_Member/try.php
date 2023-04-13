@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +23,12 @@
          <label class = "logo">Attendance Monitoring System</label>
 
         <ul>
-      <li><a href="#">Einstein D. Yong</a></li>
+      <li><a href="#"> <b>
+
+        <?php echo $_SESSION['user_fullname'];
+        ?>
+
+      </b> </a></li>
     </ul>
   
   </nav>
