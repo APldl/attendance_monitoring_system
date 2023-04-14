@@ -18,28 +18,27 @@ session_start();
 			<nav>
 		  	 <div class="d-flex justify-content-centerlogo">
        			 <img class="logo" src="https://signin.apc.edu.ph/images/logo.png" width="60px"/>
-       			  <label class = "logo">Attendance Monitoring System</label>
     		 </div>
-    		 	<div class="username">
-    		 		<ul>
-						<li><a href="#"><b>
+    		 <label class = "logo">Attendance Monitoring System</label>
+
+			<ul>
+      <li><a href="#"> <b>
 
         <?php echo $_SESSION['user_fullname'];
         ?>
 
-      </b></a></li>
-					</ul>
-    		 	</div>
-    		
-	 
-	</nav>
+      </b> </a></li>
+    </ul>
+  
+  </nav>
 
 	<div class="wrapper">
 		<div class="sidebar">
-			<div class="tite">
-				<h2>Schools</h2>
-				<ul><li><a class="school-name" href="#">School of Engineering</a></li></ul>
-			</div>
+			<h2>Schools</h2>
+			<ul>
+				<li><a href="#">School of Engineering</a></li>
+			</ul>
+		
 		</div>
 		<div class="main_content">
 			<div class="info">

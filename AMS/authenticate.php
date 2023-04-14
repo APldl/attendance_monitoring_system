@@ -28,15 +28,16 @@
 
     if($_SESSION['user_role'] == 1){
       //header('Location: dashboard_faculty.php');
-      header('Location: Faculty_Member/try.php');
+      header('Location: Faculty_Member/dashboard_FM.php');
     }else if($_SESSION['user_role'] == 2){
-      header('Location: dashboard_attendance_checker.php');
+      header('Location: Attendance_Checker/dashboard_AC.php');
     }else if($_SESSION['user_role'] == 3){
-      header('Location: dashboard_faculty_encoder.php');
+      header('Location: Faculty_Encoder/dashboard_FE.php');
     }else if($_SESSION['user_role'] == 4){
-      header('Location: dashboard_academic_head.php');
+      header('Location: Faculty_Head/dashboard_FH.php');
     }else if($_SESSION['user_role'] == 5){
       header('Location: dashboard_admin.php');
+      //wla pa folder
     }
 
   }else {

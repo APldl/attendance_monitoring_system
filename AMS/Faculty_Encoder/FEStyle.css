@@ -1,0 +1,156 @@
+*{
+	padding:0;
+	margin:0;
+	text-decoration: none;
+	list-style: none;
+	box-sizing: border-box;
+}
+body{
+	font-family: monserrat;
+}
+nav{
+	background: #043877;
+	height:70px;
+	width: 100%;
+}
+label.logo{
+	color:#E8C01F;
+	font-size: 28px;
+	line-height: 80px;
+	padding: 0 100px;
+	font-weight: bold;
+	position: relative;
+	top:-70px;
+	left: -30px;
+}
+h3{
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.575rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+nav ul{
+
+	float: right;
+	margin-right: 20px;
+
+}
+
+nav ul li a:hover{
+background: #505962;
+
+}
+.wrapper .sidebar{
+	position:absolute;
+	width: 250px;
+	height: 100%;
+	background:#343A40;
+	padding:30px 0;
+}
+.sidebar{
+	padding: 4px;
+}
+.wrapper .sidebar h2{
+	color:#E8C01F;
+	text-transform: uppercase;
+	text-align:left;
+	margin-bottom: 5px;
+
+}
+.wrapper .sidebar ul li{
+	padding:3px;
+	border-bottom: 1px solid rgba(0,0,0,0.05);
+	border-top: 1px solid rgba(0,0,0,0.05);
+
+}
+.wrapper .sidebar ul li a{
+	color:#BEC3CC;
+	display:block;
+}
+.wrapper .sidebar ul li:hover{
+	background: #505962;
+}
+
+
+
+
+
+
+.heading {
+	text-align: center;
+}
+.user-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.user-item {
+	background-color: #f0f0f0;
+	padding: 10px;
+	margin: 5px;
+	border-radius: 5px;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	width: 300px;
+	height: 50px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+.user-icon {
+	width: 37px;
+	height: 37px;
+	margin-left: 0;
+	border-radius: 50%;
+	object-fit: cover;
+}
+.user-name {
+	text-align: center;
+	flex: 1;
+	margin-left: 10px;
+}
+a:link {
+  color: black; /* change to your desired color */
+}
+
+a:visited {
+  color: black; /* change to your desired color */
+}
+.user-name a {
+   color: black;
+   text-decoration: none;
+}
+
+
+
+
+.yourname{
+	color:#E8C01F !important;
+	display:inline-block;
+	line-height: 80px;
+	margin: 0 5px;
+}
+.yourname{
+	font-size: 17px;
+	text transform: uppercase;
+	position: relative;
+	top:-70px;
+
+}
+
+.user-item a {
+    display: flex;
+    align-items: center;
+    color: #000;
+    text-decoration: none;
+    padding: 10px;
+}
+
+
