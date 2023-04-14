@@ -23,17 +23,6 @@
     require 'connection.php';
 
     //2. Insert SQL
-    $sql = "INSERT INTO `user`(
-            `user_email`,  
-            `user_password`,
-            `user_fullname`,
-            `role_id`
-          ) VALUES (
-            '".$user_email."',
-            '".$user_password."',
-            '".$user_fullname."',
-            '".$role_id."'
-          )";
 
     $exist = "
         SELECT 
@@ -56,6 +45,19 @@
       header('Location: register_incorrect_email.php');
     } 
     else {
+
+      $sql = "INSERT INTO `user`(
+            `user_email`,  
+            `user_password`,
+            `user_fullname`,
+            `role_id`
+          ) VALUES (
+            '".$user_email."',
+            '".$user_password."',
+            '".$user_fullname."',
+            '".$role_id."'
+          )";
+
       //original email
       //header('Location: ../register.php?origemail=false');
       mysqli_query($conn, $sql);
