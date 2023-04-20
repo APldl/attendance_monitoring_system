@@ -1,8 +1,6 @@
 <?php
-session_start();
-
-require 'connection.php';
-
+    session_start();
+    require 'connection.php';
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +23,7 @@ require 'connection.php';
                     <ul>
                 <li ><a href="#" class = "yourname"> <b>
 
-        <?php echo $_SESSION['user_fullname']; ?>
+        <?php echo 'user_fullname'; ?> 
 
       </b></a></li>
             </ul>
@@ -46,9 +44,6 @@ require 'connection.php';
             </div>
         </div>
     </div>
-
-
-
 
     <ul class="user-list">
         <?php
