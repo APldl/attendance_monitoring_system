@@ -61,12 +61,12 @@ require 'connection.php';
             $user_id = $row['user_id'];
             //$profile_picture = $row['profile_picture'];
         ?>
-	<li class="user-item">
-    	<a href="user_profile.php?id=<?php echo $row['user_id']; ?>">
-        	<img class="user-icon" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Icon">
-        	<div class="user-name"><?php echo $fullname; ?></div>
-    	</a>
-	</li>
+<a href="user_profile.php?id=<?php echo $user_id; ?>">
+  <li class="user-item">
+    <img class="user-icon" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Icon">
+    <div class="user-name"><?php echo $fullname; ?></div>
+  </li>
+</a>
         <?php } ?>
     </ul>
 
