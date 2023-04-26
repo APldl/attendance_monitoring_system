@@ -23,7 +23,8 @@
                     <ul>
                 <li ><a href="#" class = "yourname"> <b>
 
-        <?php echo 'user_fullname'; ?> 
+        <?php echo $_SESSION['user_fullname'];
+        ?>
 
       </b></a></li>
             </ul>
@@ -56,7 +57,7 @@
             $user_id = $row['user_id'];
             //$profile_picture = $row['profile_picture'];
         ?>
-<a href="user_profile.php?id=<?php echo $user_id; ?>">
+<a href="edit_sched.php?id=<?php echo $user_id; ?>">
   <li class="user-item">
     <img class="user-icon" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Icon">
     <div class="user-name"><?php echo $fullname; ?></div>
