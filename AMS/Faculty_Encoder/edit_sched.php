@@ -1,7 +1,5 @@
 <?php
-session_start();
-require 'connection.php';
-
+require_once 'connection.php';
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
 
@@ -132,9 +130,7 @@ if (isset($_GET['id'])) {
 
 
 <?php
-    session_start();
-    require 'connection.php';
-    
+    require_once 'connection.php';
     if (isset($_GET['id'])) {
         $user_id = $_GET['id'];
         
