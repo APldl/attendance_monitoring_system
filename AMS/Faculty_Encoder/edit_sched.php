@@ -1,5 +1,7 @@
 <?php
 require_once 'connection.php';
+
+
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
 
@@ -87,7 +89,7 @@ if (isset($_GET['id'])) {
 
         .wrapper2 {
             display: block;
-            margin: 50px auto;
+            margin: 20px auto;
             max-width: 800px;
             padding: 20px;
             background-color: #f0f0f0;
@@ -99,6 +101,54 @@ if (isset($_GET['id'])) {
         .details span.not-bold {
             font-weight: bold;
         }
+        .container-tb {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      margin-left: 290px; /* add margin to move the container to the right */
+    }
+
+    .table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .table th,
+    .table td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ccc;
+    }
+
+    .table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+
+    .container-tb {
+    position: relative;
+    }
+
+    .edit-icon {
+    position: relative;
+    bottom: 0;
+    margin-left: 1030px;
+    padding: 10px;
+    }
+
+    .edit-icon img {
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+    }
+
     </style>
 </head>
 
@@ -190,6 +240,57 @@ if (isset($_GET['id'])) {
     </div>
 </body>
 
+<div class="container-tb">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Subject Code</th>
+        <th>Subject Units</th>
+        <th>Schedule Day</th>
+        <th>Section</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Room</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+        // Include database connection file
+
+        // Retrieve data from database
+        $sql = "SELECT * FROM schedule WHERE user_id = '".$user_id."'";
+        $result = mysqli_query($conn, $sql);
+
+        // Display data in table
+        if (mysqli_num_rows($result) > 0) {
+          while($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
+            echo "<td class='table__cell'>" . $row["subject_units"] . "</td>";
+            echo "<td class='table__cell'>" . $row["schedule_day"] . "</td>";
+            echo "<td class='table__cell'>" . $row["section"] . "</td>";
+            echo "<td class='table__cell'>" . $row["schedule_time_start"] . "</td>";
+            echo "<td class='table__cell'>" . $row["schedule_time_end"] . "</td>";
+            echo "<td class='table__cell'>" . $row["room"] . "</td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td class='table__cell' colspan='7'>No schedule found.</td></tr>";
+        }
+
+        // Close database connection
+        mysqli_close($conn);
+      ?>
+    </tbody>
+  </table>
+</div>
+
+  <div class="edit-icon">
+    <a href="#" title="Edit">
+      <img src="https://www.clipartmax.com/png/small/121-1212430_white-edit-11-icon-edit-icon-bootstrap-png.png" alt="White Edit 11 Icon - Edit Icon Bootstrap Png @clipartmax.com" alt="Edit Icon">
+      Edit
+    </a>
+  </div>
 
 </body>
 </html>
