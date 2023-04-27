@@ -22,12 +22,29 @@ session_start();
     		 <label class = "logo">Attendance Monitoring System</label>
 
 			<ul>
-      <li><a href="#"> <b>
-
-        <?php echo $_SESSION['user_fullname'];
-        ?>
-
-      </b> </a></li>
+      <!-- <li><a href="#"> <b><?php echo $_SESSION['user_fullname'];?></b> </a></li> -->
+        <li class="logout-link">
+        <a href="#">
+          I am Attendance Checker
+          <div class="dropdown-menu">
+            <div class="logout-box">
+              <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">
+              
+              </span>
+              <span id="user_role_type" name="role_type" class="role-type" onselectstart="return false;">
+                          </span>
+            </div>
+            <ul id="btn_logout" class="log-out">
+              <form name="logout-form" method="post">
+                <button class="logout-button" type="button" onclick="logout()">
+                  <span class="fas fa-power-off"></span>
+                  Log Out
+                </button>
+              </form>
+            </ul>
+          </div>
+        </a>
+      </li>
     </ul>
   
   </nav>
@@ -42,7 +59,7 @@ session_start();
 		</div>
 		<div class="main_content">
 			<div class="info">
-				<div>lorem lorem</div>
+				<
 			</div>
 		</div>
 	</div>
