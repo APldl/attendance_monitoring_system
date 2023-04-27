@@ -9,7 +9,7 @@ session_start();
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="EXPStyle.css">
+	<link rel="stylesheet" href="ACStyle.css">
 	<title>
 		
 	</title>
@@ -29,11 +29,10 @@ session_start();
           <div class="dropdown-menu">
             <div class="logout-box">
               <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">
-                <?php include 'admin_name.php';?>
+              
               </span>
               <span id="user_role_type" name="role_type" class="role-type" onselectstart="return false;">
-                <?php include 'admin_role.php';?>
-              </span>
+                          </span>
             </div>
             <ul id="btn_logout" class="log-out">
               <form name="logout-form" method="post">
