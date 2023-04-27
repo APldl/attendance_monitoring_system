@@ -75,6 +75,8 @@ if (isset($_GET['id'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="FEStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
 
@@ -98,55 +100,82 @@ if (isset($_GET['id'])) {
 
 <div class="container-tb">
   <table class="table">
-    <thead>
-      <tr>
-        <th>Subject Code</th>
-        <th>Subject Units</th>
-        <th>Schedule Day</th>
-        <th>Section</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Room</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-        // Include database connection file
+<thead>
+  <tr>
+    <th></th>
+    <th>Subject Code</th>
+    <th>Subject Units</th>
+    <th>Schedule Day</th>
+    <th>Section</th>
+    <th>Start Time</th>
+    <th>End Time</th>
+    <th>Room</th>
+  </tr>
+</thead>
+<tbody>
+  <?php
+    // Include database connection file
 
-        // Retrieve data from database
-        $sql = "SELECT * FROM schedule WHERE user_id = '".$user_id."'";
-        $result = mysqli_query($conn, $sql);
+    // Retrieve data from database
+    $sql = "SELECT * FROM schedule WHERE user_id = '".$user_id."'";
+    $result = mysqli_query($conn, $sql);
 
-        // Display data in table
-        if (mysqli_num_rows($result) > 0) {
-          while($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
-            echo "<td class='table__cell'>" . $row["subject_units"] . "</td>";
-            echo "<td class='table__cell'>" . $row["schedule_day"] . "</td>";
-            echo "<td class='table__cell'>" . $row["section"] . "</td>";
-            echo "<td class='table__cell'>" . $row["schedule_time_start"] . "</td>";
-            echo "<td class='table__cell'>" . $row["schedule_time_end"] . "</td>";
-            echo "<td class='table__cell'>" . $row["room"] . "</td>";
-            echo "</tr>";
-          }
-        } else {
-          echo "<tr><td class='table__cell' colspan='7'>No schedule found.</td></tr>";
-        }
+    // Display data in table
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td class='table__cell'><button class='table__button' onclick='deleteRow(this, " . $row['schedule_id'] . ")'><i class='fa fa-trash fa-2x' style='color: red;'></i></button></td>";
+        echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
+        echo "<td class='table__cell'>" . $row["subject_units"] . "</td>";
+        echo "<td class='table__cell'>" . $row["schedule_day"] . "</td>";
+        echo "<td class='table__cell'>" . $row["section"] . "</td>";
+        echo "<td class='table__cell'>" . $row["schedule_time_start"] . "</td>";
+        echo "<td class='table__cell'>" . $row["schedule_time_end"] . "</td>";
+        echo "<td class='table__cell'>" . $row["room"] . "</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td class='table__cell' colspan='8'>No schedule found.</td></tr>";
+}
 
-        // Close database connection
-        mysqli_close($conn);
-      ?>
-    </tbody>
+    // Close database connection
+    mysqli_close($conn);
+  ?>
+</tbody>
   </table>
 </div>
 
-  <div class="edit-icon">
-    <a href="edit_sched_function.php?id=<?php echo $user_id; ?>">
-      <img src="https://www.clipartmax.com/png/small/121-1212430_white-edit-11-icon-edit-icon-bootstrap-png.png" alt="White Edit 11 Icon - Edit Icon Bootstrap Png @clipartmax.com" alt="Edit Icon">
-      Edit
-    </a>
+    <div class="save-icon">
+        <a class="btn_add" href="#" role="button">+ Add Row</a>
+        <a class="btn_cancel" href="#" role="button">Cancel</a>
+        <a class="btn_save" href="#" role="button">Save</a>
   </div>
+
+
+<script>
+function deleteRow(button, schedule_id) {
+  if (confirm("Are you sure you want to delete this row?")) {
+    var user_id = <?php echo $user_id; ?>;
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = this.responseText;
+        if (response == 'success') {
+          button.closest('tr').remove();
+          window.location.reload();
+        } else {
+          alert('Error deleting row'); 
+        }
+      }
+    };
+    xhr.open("POST", "delete_row.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("user_id=" + user_id + "&schedule_id=" + schedule_id);
+  }
+}
+</script>
+
 
 </body>
 </html>
