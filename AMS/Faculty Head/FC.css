@@ -5,14 +5,17 @@
 	list-style: none;
 	box-sizing: border-box;
 }
+
 body{
 	font-family: monserrat;
 }
+
 nav{
 	background: #043877;
 	height:70px;
 	width: 100%;
 }
+
 label.logo{
 	color:#E8C01F;
 	font-size: 28px;
@@ -23,6 +26,7 @@ label.logo{
 	top:-70px;
 	left: -30px;
 }
+
 h3{
     margin-top: 0;
     margin-bottom: 0.5rem;
@@ -32,59 +36,194 @@ h3{
 }
 
 nav ul{
-
 	float: right;
 	margin-right: 20px;
-
 }
+
 nav ul li{
 	color:#E8C01F;
 	display:inline-block;
 	line-height: 80px;
 	margin: 0 5px;
 }
+
 nav ul li a{
 	color:#E8C01F;
 	font-size: 17px;
 	text transform: uppercase;
 	position: relative;
 	top:-70px;
-
 }
-nav ul li a:hover{
-background: #505962;
 
+nav ul li school-list:hover{
+	background: #505962;
 }
+
 .wrapper .sidebar{
-	position:absolute;
+	position:fixed;
 	width: 250px;
 	height: 100%;
 	background:#343A40;
 	padding:30px 0;
 }
-.sidebar{
-	padding: 4px;
-}
+
 .wrapper .sidebar h2{
 	color:#E8C01F;
 	text-transform: uppercase;
 	text-align:left;
 	margin-bottom: 5px;
-
 }
+
 .wrapper .sidebar ul li{
 	padding:3px;
 	border-bottom: 1px solid rgba(0,0,0,0.05);
 	border-top: 1px solid rgba(0,0,0,0.05);
-
 }
+
 .wrapper .sidebar ul li a{
 	color:#BEC3CC;
 	display:block;
 }
+
 .wrapper .sidebar ul li:hover{
 	background: #505962;
 }
 
+.dropdown {
+	position: relative;
+	border: none; /* Remove border */
+	border-radius: 5px;
+}
 
+.dropdown:hover {
+	
+}
 
+.dropdown-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	display: none;
+}
+
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+.select {
+	display: block;
+	margin: 10px 0;
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #444;
+	background-color: #fff;
+	margin-bottom: 10px;
+}
+
+label {
+	display: inline-block;
+	margin-bottom: 5px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #666;
+}
+
+.info {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 
+}
+
+.bodybutton{
+	position: absolute;
+	text transform: uppercase;
+	left: 30%;
+	color:#E8C01F;
+	font-size: 17px;
+}
+
+.title-link:hover{
+	text-decoration: underline !important;
+}
+
+/* Logout box styles (currently commented out) */
+/*
+.logout-box {
+	display: inline-block;
+	padding: 35px;
+	background-color: lightgray;
+	box-shadow: 0 0 5px rgba(0,0,0,0.2);
+	margin-top: -20px;
+	height: 100px;
+	width: 117px;
+}
+
+.logout-box a {
+	color: black;
+	text-decoration: none;
+}
+
+.logout-box a:hover {
+	text-decoration: underline;
+}
+*/
+.logout-box {
+  background-color: transparent;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+ul.log-out {
+  height: 30px;
+}
+ /* Added styles for Log Out menu */
+    .logout-link {
+      position: relative;
+    }
+    .logout-link:hover .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 10x%;
+      right: 0;
+      z-index: 1;
+      padding: 0;0
+      margin: 0;
+    }-
+    out-name {
+      font-weight: bold;
+    }
+    .role-type {
+      font-style: italic;
+    }
+    .log-out {
+      list-style: none;
+      padding: -5px;
+      margin: 5px 0 0;
+    }
+    .logout-button {
+      background-color: #E8C01F;
+      color: #043877;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+     display: block;
+  	margin: 0 auto;
+
+    }
+    .logout-button:hover {
+      background-color: #c82333;
+      color: #fff;
+    }
+    .logout-box {
+      background-color: none;
+      border: 1px solid black;
+      padding: 0px;
+    }
