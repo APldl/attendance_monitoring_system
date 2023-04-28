@@ -20,10 +20,10 @@ session_start();
     		 <label class = "logo">Attendance Monitoring System</label>
 
 			<ul>
-      <!-- <li><a href="#"> <b><?php echo $_SESSION['user_fullname'];?></b> </a></li> -->
+      
         <li class="logout-link">
         <a href="#">
-          I am Faculty Head
+      <?php echo $_SESSION['user_fullname'];?>
           <div class="dropdown-menu">
             <div class="logout-box">
               <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">

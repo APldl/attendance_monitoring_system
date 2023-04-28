@@ -1,8 +1,5 @@
 <?php
-
-
 include "connection.php";
-
 ?>
 
 <!DOCTYPE html>
@@ -10,9 +7,9 @@ include "connection.php";
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="Style.css">
+  <link rel="stylesheet" href="FMStyle.css">
   <title>
-    
+
   </title>
   </head>
     <body>
@@ -23,12 +20,32 @@ include "connection.php";
          <label class = "logo">Attendance Monitoring System</label>
 
         <ul>
-      <li><a href="#"> <b>
+    
 
-        <?php echo $_SESSION['user_fullname'];
+       
+      <li class="logout-link">
+         <a href="#">
+          <?php echo $_SESSION['user_fullname'];
         ?>
-
-      </b> </a></li>
+          <div class="dropdown-menu">
+            <div class="logout-box">
+              <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">
+              
+              </span>
+              <span id="user_role_type" name="role_type" class="role-type" onselectstart="return false;">
+                          </span>
+            </div>
+            <ul id="btn_logout" class="log-out">
+              <form name="logout-form" method="post">
+                <button class="logout-button" type="button" onclick="logout()">
+                  <span class="fas fa-power-off"></span>
+                  Log Out
+                </button>
+              </form>
+            </ul>
+          </div>
+        </a>
+      </li>
     </ul>
   
   </nav>

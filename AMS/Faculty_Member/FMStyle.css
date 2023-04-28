@@ -153,21 +153,3 @@ ul.log-out {
 .role-type {
 	font-style: italic;
 }
-
-/* Added styles for Log Out button */
-.logout-link:hover .logout-button {
-	display: block;
-}
-
-.logout-button {
-	display: none;
-	position: absolute;
-	top: 100%;
-	right: 0;
-	z-index: 1;
-}
-
-.logout-box:hover .logout-button {
-	display: block;
-}
-
