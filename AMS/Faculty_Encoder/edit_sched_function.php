@@ -146,9 +146,9 @@ if (mysqli_num_rows($result) > 0) {
 </div>
 
     <div class="save-icon">
-        <a class="btn_add" href="#" role="button">+ Add Row</a>
-        <a class="btn_cancel" href="#" role="button">Cancel</a>
-        <a class="btn_save" href="#" role="button">Save</a>
+        <a class="btn_add" href="edit_sched_function.php?id=<?php echo $user_id; ?>" role="button">+ Add Row</a>
+        <a class="btn_cancel" href="edit_sched_function.php?id=<?php echo $user_id; ?>" role="button">Cancel</a>
+        <a class="btn_save" href="edit_sched_function.php?id=<?php echo $user_id; ?>" role="button">Save</a>
   </div>
 
 
