@@ -37,6 +37,40 @@ if (isset($_GET['id'])) {
 
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Attendance Monitoring System</title>
+
+</head>
+
+<body>
+    <nav>
+        <div class="d-flex justify-content-centerlogo">
+            <img class="logo" src="https://signin.apc.edu.ph/images/logo.png" width="60px"/>
+        </div>
+        <label class="logo">Attendance Monitoring System</label>
+        <ul>
+            <li><a href="#" class="yourname"><b><?php echo $_SESSION['user_fullname']; ?></b></a></li>
+        </ul>
+    </nav>
+
+    <div class="wrapper">
+        <div class="sidebar">
+            <h2>Schools</h2>
+            <ul>
+                <li><a href="#">School of Engineering</a></li>
+            </ul>
+        
+        </div>
+        <div class="main_content">
+            <div class="info">
+                <div>lorem lorem</div>
+            </div>
+        </div>
+    </div>
+
+</head>
 
 <head>
     <meta charset="utf-8">
@@ -68,52 +102,53 @@ if (isset($_GET['id'])) {
 <div class="container-tb">
   <form method="post" action="save_schedule.php?id=<?php echo $user_id; ?>">
     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-  <table class="table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Subject Code</th>
-        <th>Subject Units</th>
-        <th>Schedule Day</th>
-        <th>Section</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Room</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-        // Include database connection file
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Subject Code</th>
+          <th>Subject Units</th>
+          <th>Schedule Day</th>
+          <th>Section</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Room</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <?php
+          // Include database connection file
 
-        // Retrieve data from database
-        $sql = "SELECT * FROM schedule WHERE user_id = '".$user_id."'";
-        $result = mysqli_query($conn, $sql);
+          // Retrieve data from database
+          $sql = "SELECT * FROM schedule WHERE user_id = '".$user_id."'";
+          $result = mysqli_query($conn, $sql);
 
-        // Display data in table
-        if (mysqli_num_rows($result) > 0) {
-          while($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td class='table__cell'><button class='table__button' onclick='deleteRow(this, " . $row['schedule_id'] . ")'><i class='fa fa-trash fa-2x' style='color: red;'></i></button></td>";
-            echo "<td class='table__cell'><input type='text' name='subject_code[]' value='" . $row["subject_code"] . "'></td>";
-            echo "<td class='table__cell'><input type='text' name='subject_units[]' value='" . $row["subject_units"] . "'></td>";
-            echo "<td class='table__cell'><input type='text' name='schedule_day[]' value='" . $row["schedule_day"] . "'></td>";
-            echo "<td class='table__cell'><input type='text' name='section[]' value='" . $row["section"] . "'></td>";
-            echo "<td class='table__cell'><input type='text' name='schedule_time_start[]' value='" . $row["schedule_time_start"] . "'></td>";
-            echo "<td class='table__cell'><input type='text' name='schedule_time_end[]' value='" . $row["schedule_time_end"] . "'></td>";
-            echo "<td class='table__cell'><input type='text' name='room[]' value='" . $row["room"] . "'></td>";
-            echo "<input type='hidden' name='schedule_id[]' value='" . $row["schedule_id"] . "' />";
+          // Display data in table
+          if (mysqli_num_rows($result) > 0) {
+            while($row = mysqli_fetch_assoc($result)) {
+              echo "<tr>";
+              echo "<td class='table__cell'><button class='table__button' onclick='deleteRow(this, " . $row['schedule_id'] . ")'><i class='fa fa-trash fa-2x' style='color: red;'></i></button></td>";
+              echo "<td class='table__cell'><input type='text' name='subject_code[]' value='" . $row["subject_code"] . "'></td>";
+              echo "<td class='table__cell'><input type='text' name='subject_units[]' value='" . $row["subject_units"] . "'></td>";
+              echo "<td class='table__cell'><input type='text' name='schedule_day[]' value='" . $row["schedule_day"] . "'></td>";
+              echo "<td class='table__cell'><input type='text' name='section[]' value='" . $row["section"] . "'></td>";
+              echo "<td class='table__cell'><input type='text' name='schedule_time_start[]' value='" . $row["schedule_time_start"] . "'></td>";
+              echo "<td class='table__cell'><input type='text' name='schedule_time_end[]' value='" . $row["schedule_time_end"] . "'></td>";
+              echo "<td class='table__cell'><input type='text' name='room[]' value='" . $row["room"] . "'></td>";
+              echo "<input type='hidden' name='schedule_id[]' value='" . $row["schedule_id"] . "' />";
+            }
+          } else {
+            echo "<tr><td class='table__cell' colspan='8'>No schedule found.</td></tr>";
           }
-        } else {
-          echo "<tr><td class='table__cell' colspan='8'>No schedule found.</td></tr>";
-        }
 
-        // Close database connection
-        mysqli_close($conn);
-      ?>
-    </tbody>
-  </table>
-  <button type="submit">Save</button>
-</form>
+          // Close database connection
+          mysqli_close($conn);
+        ?>
+      </tbody>
+    </table>
+    <button type="button" onclick="addRow()">Add Row</button>
+    <button type="submit">Save</button>
+  </form>
 </div>
 
     <div class="save-icon">
@@ -144,6 +179,43 @@ function deleteRow(button, schedule_id) {
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send("user_id=" + user_id + "&schedule_id=" + schedule_id);
   }
+}
+
+function addRow() {
+  var table = document.querySelector(".table");
+  var tbody = table.querySelector("tbody");
+  var row = document.createElement("tr");
+  var cell1 = document.createElement("td");
+  var cell2 = document.createElement("td");
+  var cell3 = document.createElement("td");
+  var cell4 = document.createElement("td");
+  var cell5 = document.createElement("td");
+  var cell6 = document.createElement("td");
+  var cell7 = document.createElement("td");
+  var cell8 = document.createElement("td");
+  var cell9 = document.createElement("td");
+
+  cell1.innerHTML = "<button class='table__button' onclick='deleteRow(this)'><i class='fa fa-trash fa-2x' style='color: red;'></i></button>";
+  cell2.innerHTML = "<input type='text' name='subject_code[]'>";
+  cell3.innerHTML = "<input type='text' name='subject_units[]'>";
+  cell4.innerHTML = "<input type='text' name='schedule_day[]'>";
+  cell5.innerHTML = "<input type='text' name='section[]'>";
+  cell6.innerHTML = "<input type='text' name='schedule_time_start[]'>";
+  cell7.innerHTML = "<input type='text' name='schedule_time_end[]'>";
+  cell8.innerHTML = "<input type='text' name='room[]'>";
+  cell9.innerHTML = "<input type='hidden' name='schedule_id[]' value='' />";
+
+  row.appendChild(cell1);
+  row.appendChild(cell2);
+  row.appendChild(cell3);
+  row.appendChild(cell4);
+  row.appendChild(cell5);
+  row.appendChild(cell6);
+  row.appendChild(cell7);
+  row.appendChild(cell8);
+  row.appendChild(cell9);
+
+  tbody.appendChild(row);
 }
 </script>
 
