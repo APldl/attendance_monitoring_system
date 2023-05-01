@@ -1,7 +1,6 @@
 <?php
 require_once 'connection.php';
 
-
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
 
@@ -12,6 +11,7 @@ if (isset($_GET['id'])) {
     if (mysqli_num_rows($result_user) > 0) {
         $row_user = mysqli_fetch_assoc($result_user);
         $fullname = $row_user['user_fullname'];
+        $school_department = $row_user['school_department'];
         // add more user details here as needed
     } else {
         // handle user not found error here
@@ -24,7 +24,6 @@ if (isset($_GET['id'])) {
     if (mysqli_num_rows($result_schedule) > 0) {
         $row_schedule = mysqli_fetch_assoc($result_schedule);
         $academic_year = $row_schedule['academic_year'];
-        $school_department = $row_schedule['school_department'];
         // add more schedule details here as needed
     } else {
         // handle schedule not found error here
@@ -85,8 +84,8 @@ if (isset($_GET['id'])) {
                 <div class="profile-container">
                     <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Profile Picture">
                     <div class="details">
-                    <p><span class="not-bold">Academic Year:</span> <span><?php echo $academic_year; ?></span></p>
                     <p><span class="not-bold">Faculty Name:</span> <span><?php echo $fullname; ?></span></p>
+                    <p><span class="not-bold">Academic Year:</span> <span><?php echo $academic_year; ?></span></p>
                     <p><span class="not-bold">School Department:</span> <span><?php echo $school_department; ?></span></p>
                     </div>
                     </div> 
