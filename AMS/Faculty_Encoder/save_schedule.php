@@ -13,17 +13,18 @@
   $schedule_time_starts = $_POST['schedule_time_start'];
   $schedule_time_ends = $_POST['schedule_time_end'];
   $rooms = $_POST['room'];
+  $academic_year = $_POST['academic_year'];
 
   // Update or insert rows in the database
   for ($i = 0; $i < count($schedule_ids); $i++) {
     if (!empty($schedule_ids[$i])) {
       // Update existing row in the database
-      $sql = "UPDATE schedule SET subject_code='".$subject_codes[$i]."', subject_units='".$subject_units[$i]."', schedule_day='".$schedule_days[$i]."', section='".$sections[$i]."', schedule_time_start='".$schedule_time_starts[$i]."', schedule_time_end='".$schedule_time_ends[$i]."', room='".$rooms[$i]."' WHERE schedule_id=".$schedule_ids[$i];
+$sql = "UPDATE schedule SET academic_year='".$academic_year."', subject_code='".$subject_codes[$i]."', subject_units='".$subject_units[$i]."', schedule_day='".$schedule_days[$i]."', section='".$sections[$i]."', schedule_time_start='".$schedule_time_starts[$i]."', schedule_time_end='".$schedule_time_ends[$i]."', room='".$rooms[$i]."' WHERE schedule_id=".$schedule_ids[$i];
       mysqli_query($conn, $sql);
       $message = "Schedule updated successfully.";
     } else {
       // Insert new row in the database
-      $sql = "INSERT INTO schedule (user_id, subject_code, subject_units, schedule_day, section, schedule_time_start, schedule_time_end, room) VALUES ('".$user_id."', '".$subject_codes[$i]."', '".$subject_units[$i]."', '".$schedule_days[$i]."', '".$sections[$i]."', '".$schedule_time_starts[$i]."', '".$schedule_time_ends[$i]."', '".$rooms[$i]."')";
+$sql = "INSERT INTO schedule (user_id, academic_year, subject_code, subject_units, schedule_day, section, schedule_time_start, schedule_time_end, room) VALUES ('".$user_id."', '".$academic_year."', '".$subject_codes[$i]."', '".$subject_units[$i]."', '".$schedule_days[$i]."', '".$sections[$i]."', '".$schedule_time_starts[$i]."', '".$schedule_time_ends[$i]."', '".$rooms[$i]."')";
       mysqli_query($conn, $sql);
       $message = "Schedule added successfully.";
     }

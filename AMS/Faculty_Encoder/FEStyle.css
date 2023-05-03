@@ -264,17 +264,9 @@ a:visited {
     }
 
 
-    .save-icon {
-    position: relative;
-    bottom: 0;
-    margin-left: 780px;
-
-    }
-
-
 
     .btn_add {
-
+    margin-left: 602px !important;
   	margin: 10px;
   	display: inline-block;
   	border-radius: 4px;
@@ -286,6 +278,8 @@ a:visited {
   	text-decoration: none;
   	cursor: pointer;
   	transition: background-color 0.3s ease;
+    border: none;
+    outline: none;
 	}
 
 	    .btn_cancel {
@@ -302,16 +296,18 @@ a:visited {
   	transition: background-color 0.3s ease;
 	}
 
-	    .btn_save {
-  	margin: 10px;
-  	display: inline-block;
-  	border-radius: 4px;
-  	background-color: #000099;
-  	color: white !important;
-  	text-align: center;
-  	font-size: 16px;
-  	padding: 10px 20px;
-  	text-decoration: none;
-  	cursor: pointer;
-  	transition: background-color 0.3s ease;
-	}
+  .btn_save {
+    margin: 10px;
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #000099;
+    color: white !important;
+    text-align: center;
+    font-size: 16px;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+    outline: none; /* Add this line to remove the focus outline */
+}

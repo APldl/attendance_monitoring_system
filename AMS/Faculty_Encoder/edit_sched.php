@@ -1,6 +1,7 @@
 <?php
 require_once 'connection.php';
 
+
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
 
@@ -133,12 +134,15 @@ if (isset($_GET['id'])) {
           echo "<tr><td class='table__cell' colspan='7'>No schedule found.</td></tr>";
         }
 
+
+
         // Close database connection
         mysqli_close($conn);
       ?>
     </tbody>
   </table>
 </div>
+
 
   <div class="edit-icon">
     <a href="edit_sched_function.php?id=<?php echo $user_id; ?>">

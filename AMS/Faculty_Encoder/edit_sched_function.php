@@ -75,30 +75,27 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="FEStyle.css">
+    <link rel="stylesheet" href="FEStyle2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
-<body>
 
     <div class="wrapper2">
-
+  <form method="post" action="save_schedule.php?id=<?php echo $user_id; ?>">
+    <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
         <div class="main_content">
             <div class="info">
                 <div class="profile-container">
                     <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Profile Picture">
                     <div class="details">
                     <p><span class="not-bold">Faculty Name:</span> <span><?php echo $fullname; ?></span></p>
-                    <p><span class="not-bold">Academic Year:</span> <span><?php echo $academic_year; ?></span></p>
+                    <p><span class="not-bold">Academic Year:</span><input type="text" name="academic_year" value="<?php echo $academic_year; ?>"></p>
                     <p><span class="not-bold">School Department:</span> <span><?php echo $school_department; ?></span></p>
                     </div>
                     </div> 
                 </div>
             </div>
-        </div>
-    </div>
-</body>
-
+        
 <div class="container-tb">
   <form method="post" action="save_schedule.php?id=<?php echo $user_id; ?>">
     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
@@ -150,13 +147,7 @@ if (isset($_GET['id'])) {
     <button type="submit">Save</button>
   </form>
 </div>
-
-    <div class="save-icon">
-        <a class="btn_add" href="edit_sched_function.php?id=<?php echo $user_id; ?>" role="button">+ Add Row</a>
-        <a class="btn_cancel" href="edit_sched_function.php?id=<?php echo $user_id; ?>" role="button">Cancel</a>
-        <a class="btn_save" href="#" name="save" role="button">Save</a>
-    </div>
-
+</div>
 
 <script>
 function deleteRow(button, schedule_id) {
