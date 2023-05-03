@@ -8,4 +8,5 @@ $database = "attendance_monitoring_system";
 
   $conn = mysqli_connect($servername, $db_username, $db_password, $database);
 
+
 ?>

@@ -42,10 +42,14 @@ nav ul{
 
 }
 
-nav ul li a:hover{
-background: #505962;
-
+nav ul li a {
+  color: #E8C01F;
+  font-size: 17px;
+  text-transform: uppercase;
+  position: relative;
+  top: -40px;
 }
+
 .wrapper .sidebar{
 	position:absolute;
 	width: 250px;
@@ -115,39 +119,6 @@ background: #505962;
 	border-radius: 50%;
 	object-fit: cover;
 }
-.user-name {
-	text-align: center;
-	flex: 1;
-	margin-left: 10px;
-}
-a:link {
-  color: black; /* change to your desired color */
-}
-
-a:visited {
-  color: black; /* change to your desired color */
-}
-.user-name a {
-   color: black;
-   text-decoration: none;
-}
-
-
-
-
-.yourname{
-	color:#E8C01F !important;
-	display:inline-block;
-	line-height: 80px;
-	margin: 0 5px;
-}
-.yourname{
-	font-size: 17px;
-	text transform: uppercase;
-	position: relative;
-	top:-70px;
-
-}
 
 .user-item a {
     display: flex;
@@ -156,12 +127,6 @@ a:visited {
     text-decoration: none;
     padding: 10px;
 }
-
-
-
-
-
-
         .container {
             margin: 50px auto;
             max-width: 700px;
@@ -264,9 +229,17 @@ a:visited {
     }
 
 
+    .save-icon {
+    position: relative;
+    bottom: 0;
+    margin-left: 780px;
+
+    }
+
+
 
     .btn_add {
-    margin-left: 602px !important;
+
   	margin: 10px;
   	display: inline-block;
   	border-radius: 4px;
@@ -278,8 +251,6 @@ a:visited {
   	text-decoration: none;
   	cursor: pointer;
   	transition: background-color 0.3s ease;
-    border: none;
-    outline: none;
 	}
 
 	    .btn_cancel {
@@ -296,18 +267,69 @@ a:visited {
   	transition: background-color 0.3s ease;
 	}
 
-  .btn_save {
-    margin: 10px;
-    display: inline-block;
-    border-radius: 4px;
-    background-color: #000099;
-    color: white !important;
-    text-align: center;
-    font-size: 16px;
-    padding: 10px 20px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border: none;
-    outline: none; /* Add this line to remove the focus outline */
+	    .btn_save {
+  	margin: 10px;
+  	display: inline-block;
+  	border-radius: 4px;
+  	background-color: #000099;
+  	color: white !important;
+  	text-align: center;
+  	font-size: 16px;
+  	padding: 10px 20px;
+  	text-decoration: none;
+  	cursor: pointer;
+  	transition: background-color 0.3s ease;
+	}
+.logout-box {
+  background-color: transparent;
+  border: 1px solid black;
+  padding: 5px;
 }
+
+ul.log-out {
+  height: 30px;
+}
+ /* Added styles for Log Out menu */
+    .logout-link {
+      position: relative;
+    }
+    .logout-link:hover .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 10x%;
+      right: 0;
+      z-index: 1;
+      padding: 0;0
+      margin: 0;
+    }-
+
+    .role-type {
+      font-style: italic;
+    }
+    .log-out {
+      list-style: none;
+      padding: -5px;
+      margin: 5px 0 0;
+    }
+    .logout-button {
+      background-color: #E8C01F;
+      color: #043877;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+     display: block;
+    margin: 0 auto;
+
+    }
+    .logout-button:hover {
+      background-color: #c82333;
+      color: #fff;
+    }
+    .logout-box {
+      background-color: none;
+      border: 1px solid black;
+      padding: 0px;
+    }

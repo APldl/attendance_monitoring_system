@@ -2,6 +2,13 @@
 session_start();
 
 ?>
+<script type="text/javascript">
+  function logout(){
+    if (confirm("Are you sure you want to log out?")) {
+      window.location.href = "../login.php";
+    }
+} 
+</script>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +30,7 @@ session_start();
       
         <li class="logout-link">
         <a href="#">
-      <?php echo $_SESSION['user_fullname'];?>
+      		<?php echo $_SESSION['user_fullname'];?>
           <div class="dropdown-menu">
             <div class="logout-box">
               <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">

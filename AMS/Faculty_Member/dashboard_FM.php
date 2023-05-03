@@ -1,6 +1,17 @@
 <?php
 include "connection.php";
+
 ?>
+
+
+<script type="text/javascript">
+  function logout(){
+    if (confirm("Are you sure you want to log out?")) {
+      window.location.href = "../login.php";
+    }
+} 
+</script>
+
 
 <!DOCTYPE html>
 <html>
@@ -32,8 +43,7 @@ include "connection.php";
               <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">
               
               </span>
-              <span id="user_role_type" name="role_type" class="role-type" onselectstart="return false;">
-                          </span>
+              <span id="user_role_type" name="role_type" class="role-type" onselectstart="return false;"></span>
             </div>
             <ul id="btn_logout" class="log-out">
               <form name="logout-form" method="post">
