@@ -37,7 +37,10 @@
      }else if($_SESSION['user_role'] == 4){
        header('Location: Faculty_Head/dashboard_FH.php');
      }else if($_SESSION['user_role'] == 5){
-       header('Location: dashboard_admin.php');
+       header('Location: Payroll/dashboard_PR.php');
+       //wla pa folder
+     }else if($_SESSION['user_role'] == 6){
+       header('Location: Admin/dashboard_AdminE.php');
        //wla pa folder
      } 
   }else {

@@ -2,6 +2,7 @@
 require_once 'connection.php';
 
 
+
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
 
@@ -33,8 +34,34 @@ if (isset($_GET['id'])) {
 } else {
     // handle missing user_id parameter error here
 }
+
+
+if (!empty($error_messages)) {
+  $error_message = implode("<br>", $error_messages);
+  echo $error_message; // Add this line
+}
 ?>
 
+<?php
+// Check if the message variable is set and not empty
+if (isset($message)) {
+?>
+<script>
+  // Display an alert box with the message
+  alert("<?php echo $message; ?>");
+</script>
+<?php
+}
+?>
+
+
+<script type="text/javascript">
+  function logout(){
+    if (confirm("Are you sure you want to log out?")) {
+      window.location.href = "../login.php";
+    }
+} 
+</script>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,16 +77,39 @@ if (isset($_GET['id'])) {
             <img class="logo" src="https://signin.apc.edu.ph/images/logo.png" width="60px"/>
         </div>
         <label class="logo">Attendance Monitoring System</label>
-        <ul>
-            <li><a href="#" class="yourname"><b><?php echo $_SESSION['user_fullname']; ?></b></a></li>
-        </ul>
+              <ul>
+
+      <li class="logout-link">
+         <a href="#">
+          <?php echo $_SESSION['user_fullname'];
+        ?>
+          <div class="dropdown-menu">
+            <div class="logout-box">
+              <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">
+              
+              </span>
+              <span id="user_role_type" name="role_type" class="role-type" onselectstart="return false;"></span>
+            </div>
+            <ul id="btn_logout" class="log-out">
+              <form name="logout-form" method="post">
+                <button class="logout-button" type="button" onclick="logout()">
+                  <span class="fas fa-power-off"></span>
+                  Log Out
+                </button>
+              </form>
+            </ul>
+          </div>
+        </a>
+      </li>
+    </ul>
+  
     </nav>
 
     <div class="wrapper">
         <div class="sidebar">
             <h2>Schools</h2>
             <ul>
-                <li><a href="#">School of Engineering</a></li>
+                <li><a href="dashboard_FE.php">School of Engineering</a></li>
             </ul>
         
         </div>
@@ -137,12 +187,12 @@ if (isset($_GET['id'])) {
           } else {
             echo "<tr><td class='table__cell' colspan='8'>No schedule found.</td></tr>";
           }
-
           // Close database connection
           mysqli_close($conn);
         ?>
       </tbody>
     </table>
+
     <button type="button" onclick="addRow()">Add Row</button>
     <button type="submit">Save</button>
   </form>
@@ -210,6 +260,6 @@ function addRow() {
 }
 </script>
 
-
 </body>
 </html>
+

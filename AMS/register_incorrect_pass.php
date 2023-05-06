@@ -78,6 +78,9 @@
       <form action="register_function.php" method="post">
         <label for="fullname">Full Name</label>
         <input type="text" id="user_fullname" name="user_fullname" required>
+
+        <label for="employee_no">Employee Number</label>
+        <input type="text" id="employee_no" name="employee_no" required>
         
         <label for="user_email">Email</label>
         <input type="email" id="user_email" name="user_email" required>
@@ -94,7 +97,12 @@
           <option value="2">Attendance Checker</option>
           <option value="3">Faculty Encoder</option>
           <option value="4">Academic Head</option>
-          <option value="5">Admin</option>
+          <option value="5">Payroll</option>
+        </select>
+
+        <label for="user-role">School Department</label>
+        <select id="school_department" name="school_department">
+          <option value="School of Engineering">School of Engineering</option>
         </select>
         
         <div class="submit">

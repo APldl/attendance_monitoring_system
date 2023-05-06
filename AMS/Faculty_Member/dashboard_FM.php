@@ -1,5 +1,5 @@
 <?php
-include "connection.php";
+require_once "connection.php";
 
 ?>
 
@@ -64,7 +64,8 @@ include "connection.php";
     <div class="sidebar">
       <h2>Viewing</h2>
       <ul>
-        <li><a href="#">View Attendance Records</a></li>
+        <li><a href="dashboard_FM.php">View Class Schedule</a></li>
+        <li><a href="view_attendance.php">View Attendance Records</a></li>
         <li><a href="#">View Requests</a></li>
       </ul>
       <h2>Make Request</h2>

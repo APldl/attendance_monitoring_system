@@ -13,7 +13,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="ACstyle.css">
+    <link rel="stylesheet" href="AdminStyle.css">
     <title>
         
     </title>
@@ -56,9 +56,14 @@
 
     <div class="wrapper">
         <div class="sidebar">
+  
+            <h2>Filter users</h2>
+            <ul>
+            <li><a href="dashboard_AdminA.php">Users with no school department</a></li>
+            </ul>
             <h2>Schools</h2>
             <ul>
-                <li><a href="#">School of Engineering</a></li>
+                <li><a href="dashboard_AdminE.php">School of Engineering</a></li>
             </ul>
         
         </div>
@@ -80,7 +85,7 @@
             $user_id = $row['user_id'];
             //$profile_picture = $row['profile_picture'];
         ?>
-<a href="view_attendance.php?id=<?php echo $user_id; ?>">
+<a href="edit_user.php?id=<?php echo $user_id; ?>">
   <li class="user-item">
     <img class="user-icon" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Icon">
     <div class="user-name"><?php echo $fullname; ?></div>

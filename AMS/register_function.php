@@ -43,6 +43,8 @@
 
       //header('Location: ../register.php?origemail=false');
       header('Location: register_incorrect_email.php');
+
+      exit();
     } 
     else {
 
@@ -61,7 +63,7 @@
       //original email
       //header('Location: ../register.php?origemail=false');
       mysqli_query($conn, $sql);
-      header('Location: login.php');
+      header('Location: Faculty_Encoder/dashboard_FE.php');
     }
 
     //Closing Database Connection

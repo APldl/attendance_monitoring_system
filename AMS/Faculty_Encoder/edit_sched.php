@@ -26,13 +26,25 @@ if (isset($_GET['id'])) {
         $row_schedule = mysqli_fetch_assoc($result_schedule);
         $academic_year = $row_schedule['academic_year'];
         // add more schedule details here as needed
+
     } else {
-        // handle schedule not found error here
+        if (empty($academic_year)) {
+        $academic_year = "No Academic Year is Set";
+    }
     }
 } else {
     // handle missing user_id parameter error here
 }
 ?>
+
+
+<script type="text/javascript">
+  function logout(){
+    if (confirm("Are you sure you want to log out?")) {
+      window.location.href = "../login.php";
+    }
+} 
+</script>
 
 <!DOCTYPE html>
 <html>
@@ -49,16 +61,38 @@ if (isset($_GET['id'])) {
             <img class="logo" src="https://signin.apc.edu.ph/images/logo.png" width="60px"/>
         </div>
         <label class="logo">Attendance Monitoring System</label>
-        <ul>
-            <li><a href="#" class="yourname"><b><?php echo $_SESSION['user_fullname']; ?></b></a></li>
-        </ul>
+              <ul>
+
+      <li class="logout-link">
+         <a href="#">
+          <?php echo $_SESSION['user_fullname'];
+        ?>
+          <div class="dropdown-menu">
+            <div class="logout-box">
+              <span id="user_full_name" name="full_name" class="log-out-name" onselectstart="return false;" onclick="collapse_logout()">
+              
+              </span>
+              <span id="user_role_type" name="role_type" class="role-type" onselectstart="return false;"></span>
+            </div>
+            <ul id="btn_logout" class="log-out">
+              <form name="logout-form" method="post">
+                <button class="logout-button" type="button" onclick="logout()">
+                  <span class="fas fa-power-off"></span>
+                  Log Out
+                </button>
+              </form>
+            </ul>
+          </div>
+        </a>
+      </li>
+    </ul>
     </nav>
 
     <div class="wrapper">
         <div class="sidebar">
             <h2>Schools</h2>
             <ul>
-                <li><a href="#">School of Engineering</a></li>
+                <li><a href="dashboard_FE.php">School of Engineering</a></li>
             </ul>
         
         </div>
@@ -95,6 +129,14 @@ if (isset($_GET['id'])) {
         </div>
     </div>
 </body>
+
+<?php if (isset($_GET['show_alert']) && $_GET['show_alert'] == 1): ?>
+  <script>
+    alert("<?php echo $_GET['error_message']; ?>");
+  </script>
+<?php endif; ?>
+
+
 
 <div class="container-tb">
   <table class="table">
@@ -142,6 +184,8 @@ if (isset($_GET['id'])) {
     </tbody>
   </table>
 </div>
+
+
 
 
   <div class="edit-icon">

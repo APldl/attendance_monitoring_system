@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 // Connect to MySQL database
 $servername = "localhost";
 $db_username = "root"; //xampp default

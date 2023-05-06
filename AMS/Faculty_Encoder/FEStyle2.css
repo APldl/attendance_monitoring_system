@@ -101,8 +101,8 @@ background: #505962;
   font-size: 18px;
   font-weight: bold;
   text-align: center;
-  width: 500px;
-  height: 55px;
+  width: 700px;
+  height: 70px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -135,19 +135,26 @@ a:visited {
 
 
 
-.yourname{
-  color:#E8C01F !important;
-  display:inline-block;
-  line-height: 80px;
-  margin: 0 5px;
+nav ul{
+    float: right;
+    margin-right: 20px;
 }
-.yourname{
-  font-size: 17px;
-  text transform: uppercase;
-  position: relative;
-  top:-70px;
 
+nav ul li{
+    color:#E8C01F;
+    display:inline-block;
+    line-height: 80px;
+    margin: 0 5px;
 }
+
+nav ul li a{
+    color:#E8C01F !important;
+    font-size: 17px;
+    text transform: uppercase;
+    position: relative;
+    top:-70px;
+}
+
 
 .user-item a {
     display: flex;
@@ -316,3 +323,58 @@ a:visited {
 .table__edit {
   width: 80px;
 }
+.logout-box {
+  background-color: transparent;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+ul.log-out {
+  height: 30px;
+}
+ /* Added styles for Log Out menu */
+    .logout-link {
+      position: relative;
+    }
+    .logout-link:hover .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 10x%;
+      right: 0;
+      z-index: 1;
+      padding: 0;0
+      margin: 0;
+    }-
+    out-name {
+      font-weight: bold;
+    }
+    .role-type {
+      font-style: italic;
+    }
+    .log-out {
+      list-style: none;
+      padding: -5px;
+      margin: 5px 0 0;
+    }
+    .logout-button {
+      background-color: #E8C01F;
+      color: #043877;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+     display: block;
+    margin: 0 auto;
+
+    }
+    .logout-button:hover {
+      background-color: #c82333;
+      color: #fff;
+    }
+    .logout-box {
+      background-color: none;
+      border: 1px solid black;
+      padding: 0px;
+    }
