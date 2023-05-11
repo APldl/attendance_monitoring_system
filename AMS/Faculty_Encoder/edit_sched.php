@@ -113,7 +113,6 @@ if (isset($_GET['id'])) {
 <body>
 
     <div class="wrapper2">
-
         <div class="main_content">
             <div class="info">
                 <div class="profile-container">

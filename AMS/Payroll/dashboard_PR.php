@@ -54,20 +54,24 @@
          
         </nav>
 
-    <div class="wrapper">
-        <div class="sidebar">
-            <h2>Schools</h2>
-            <ul>
-                <li><a href="#">School of Engineering</a></li>
-            </ul>
-        
-        </div>
-        <div class="main_content">
-            <div class="info">
-                <div>lorem lorem</div>
-            </div>
+<div class="wrapper">
+    <div class="sidebar">
+        <h2>Schools</h2>
+        <ul>
+            <li class="dropdown">
+                <a href="dashboard_PR.php" class="dropdown-toggle">School of Engineering</a>
+                <div class="dropdown-content">
+                    <a href="overall.php">Overall Absences</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="main_content">
+        <div class="info">
+            <div>lorem lorem</div>
         </div>
     </div>
+</div>
 
     <ul class="user-list">
         <?php
