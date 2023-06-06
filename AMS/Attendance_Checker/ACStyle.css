@@ -100,23 +100,23 @@ background: #505962;
   border-radius: 5px;
   font-size: 18px;
   font-weight: bold;
-  text-align: center;
+  text-align: center !important;
   width: 700px;
   height: 70px;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 .user-icon {
-  width: 37px;
-  height: 37px;
+  width: 50px;
+  height: 50px;
   margin-left: 0;
   border-radius: 50%;
   object-fit: cover;
 }
 .user-name {
-  text-align: center;
+  text-align: center !important;
   flex: 1;
   margin-left: 10px;
 }
@@ -378,3 +378,17 @@ ul.log-out {
       border: 1px solid black;
       padding: 0px;
     }
+
+
+
+
+.red-circle {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 5px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}

@@ -66,12 +66,12 @@ require_once "connection.php";
       <ul>
         <li><a href="dashboard_FM.php">View Class Schedule</a></li>
         <li><a href="view_attendance.php">View Attendance Records</a></li>
-        <li><a href="#">View Requests</a></li>
+        <li><a href="#">View Approved Requests</a></li>
       </ul>
       <h2>Make Request</h2>
       <ul>
-        <li><a href="#">Make Up Class</a></li>
-        <li><a href="#">Substitution</a></li>
+        <li><a href="make_request.php">Make Up Class</a></li>
+        <li><a href="make_sub.php">Substitution</a></li>
       </ul>
     </div>
     <div class="main_content">

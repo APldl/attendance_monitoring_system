@@ -1,40 +1,8 @@
 <?php
 include "connection.php";
 
-if (isset($_GET['id'])) {
+
     $user_id = $_GET['id'];
-
-    // retrieve the user details from the user table
-    $query_user = "SELECT * FROM user WHERE user_id = $user_id";
-    $result_user = mysqli_query($conn, $query_user);
-
-    if (mysqli_num_rows($result_user) > 0) {
-        $row_user = mysqli_fetch_assoc($result_user);
-        $fullname = $row_user['user_fullname'];
-        $school_department = $row_user['school_department'];
-        // add more user details here as needed
-    } else {
-        // handle user not found error here
-    }
-
-    // retrieve the schedule details from the schedule table
-    $query_schedule = "SELECT * FROM schedule WHERE user_id = $user_id";
-    $result_schedule = mysqli_query($conn, $query_schedule);
-
-    if (mysqli_num_rows($result_schedule) > 0) {
-        $row_schedule = mysqli_fetch_assoc($result_schedule);
-        $academic_year = $row_schedule['academic_year'];
-        // add more schedule details here as needed
-
-    } else {
-        if (empty($academic_year)) {
-        $academic_year = "No Academic Year is Set";
-    }
-    }
-} else {
-    // handle missing user_id parameter error here
-}
-
 
     // retrieve the user details from the user table
     $query_user = "SELECT * FROM user WHERE user_id = $user_id";
@@ -60,10 +28,6 @@ if (isset($_GET['id'])) {
     } else {
         // handle schedule not found error here
     }
-
-// Update the 'new' column to 0 for the user with the specified ID
-$queryUpdateNewColumn = "UPDATE faculty_attendance SET `new` = 0 WHERE user_id = $user_id";
-mysqli_query($conn, $queryUpdateNewColumn);
 
 ?>
 
@@ -124,19 +88,17 @@ mysqli_query($conn, $queryUpdateNewColumn);
   
   </nav>
 
-
-
     <div class="wrapper">
         <div class="sidebar">
             <h2>Schools</h2>
             <ul>
-                <li><a href="dashboard_AC.php">School of Engineering</a></li>
+                <li><a href="dashboard_FH.php">School of Engineering</a></li>
             </ul>
         
         </div>
         <div class="main_content">
             <div class="info">
-                <div>lorem lorem</div>
+                <div></div>
             </div>
         </div>
     </div>
@@ -180,20 +142,22 @@ mysqli_query($conn, $queryUpdateNewColumn);
   </div>
 </div>
 
-
 <?php
+require 'connection.php';
+
+$statusOptions = array("Pending", "Present", "Absent", "Absent w/ Pay");
+
 if (isset($_POST['btn_search'])) {
   $month = mysqli_real_escape_string($conn, $_POST['status']);
   $year = mysqli_real_escape_string($conn, $_POST['year']);
 
   if (empty($month) && empty($year)) {
-    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' ORDER BY date DESC";
-  } elseif(empty($year)){
+    $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' ORDER BY date DESC";
+  } elseif (empty($year)) {
     // Convert month string to numeric value
     $month_num = date_parse($month)['month'];
 
-
-    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' ORDER BY date DESC";
+    $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' ORDER BY date DESC";
   } else {
     // Convert month string to numeric value
     $month_num = date_parse($month)['month'];
@@ -201,14 +165,15 @@ if (isset($_POST['btn_search'])) {
     // Convert year string to numeric value
     $year_num = intval($year);
 
-    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' AND YEAR(date) = '$year_num' ORDER BY date DESC";
+    $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' AND YEAR(date) = '$year_num' ORDER BY date DESC";
   }
 
   $table = mysqli_query($conn, $sql);
   if (mysqli_num_rows($table) > 0) {
+    echo "<form action='process.php' method='post'>";
     echo "<table>";
     echo "<tr><th>Date</th><th>Subject Code</th><th>Room</th><th>Time In</th><th>Time Out</th><th>Schedule Time</th><th>Notes</th><th>Status</th></tr>";
-    while($row = mysqli_fetch_assoc($table)) {
+    while ($row = mysqli_fetch_assoc($table)) {
       echo "<tr>";
       echo "<td class='table__cell'>" . $row["date"] . "</td>";
       echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
@@ -216,24 +181,34 @@ if (isset($_POST['btn_search'])) {
       echo "<td class='table__cell'>" . $row["Time_In"] . "</td>";
       echo "<td class='table__cell'>" . $row["Time_Out"] . "</td>";
       echo "<td class='table__cell'>" . $row["schedule_time"] . "</td>";
-      echo "<td class='table__cell'>" . $row["notes"] . "</td>";
-      echo "<td class='table__cell'>" . $row["status"] . "</td>";
+      echo "<td class='table__cell'>";
+      echo "<textarea name='notes[]' class='notes-textarea'>" . $row["notes"] . "</textarea>";
+      echo "</td>";
+      echo "<td class='table__cell'>";
+      echo "<select name='status[]' class='status-dropdown'>";
+      foreach ($statusOptions as $option) {
+        $selected = ($row['status'] === $option) ? "selected" : "";
+        echo "<option value='$option' $selected>$option</option>";
+      }
+      echo "</select>";
+      echo "</td>";
+      echo "<input type='hidden' name='attendance_id[]' value='" . $row['attendance_id'] . "'>";
       echo "</tr>";
     }
     echo "</table>";
+    echo "<input type='submit' name='btn_submit' value='Submit' class='button-class'>";
+    echo "</form>";
   } else {
     echo "<p class='attendance-not-found'>No attendance found for the selected month and year.</p>";
   }
+} else {
+  $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' ORDER BY date DESC";
+  $table = mysqli_query($conn, $sql);
 
-}elseif(true){
-$sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '".$user_id."' ORDER BY date DESC";
-    $table = mysqli_query($conn, $sql);
-
-// Display data in table
-if (mysqli_num_rows($table) > 0) {
+  echo "<form action='process.php' method='post'>";
   echo "<table>";
   echo "<tr><th>Date</th><th>Subject Code</th><th>Room</th><th>Time In</th><th>Time Out</th><th>Schedule Time</th><th>Notes</th><th>Status</th></tr>";
-  while($row = mysqli_fetch_assoc($table)) {
+  while ($row = mysqli_fetch_assoc($table)) {
     echo "<tr>";
     echo "<td class='table__cell'>" . $row["date"] . "</td>";
     echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
@@ -241,18 +216,24 @@ if (mysqli_num_rows($table) > 0) {
     echo "<td class='table__cell'>" . $row["Time_In"] . "</td>";
     echo "<td class='table__cell'>" . $row["Time_Out"] . "</td>";
     echo "<td class='table__cell'>" . $row["schedule_time"] . "</td>";
-    echo "<td class='table__cell'>" . $row["notes"] . "</td>";
-    echo "<td class='table__cell'>" . $row["status"] . "</td>";
+    echo "<td class='table__cell'>";
+    echo "<textarea name='notes[]' class='notes-textarea'>" . $row["notes"] . "</textarea>";
+    echo "</td>";
+    echo "<td class='table__cell'>";
+    echo "<select name='status[]' class='status-dropdown'>";
+    foreach ($statusOptions as $option) {
+      $selected = ($row['status'] === $option) ? "selected" : "";
+      echo "<option value='$option' $selected>$option</option>";
+    }
+    echo "</select>";
+    echo "</td>";
+    echo "<input type='hidden' name='attendance_id[]' value='" . $row['attendance_id'] . "'>";
     echo "</tr>";
   }
   echo "</table>";
-} else {
-  echo "<p class='attendance-not-found'>No attendance found.</p>";
+  echo "<input type='submit' name='btn_submit' value='Submit' class='button-class'>";
+  echo "</form>";
 }
-} else {
-  echo "<p class='attendance-not-found'>No attendance found.</p>";;
-}
-
 ?>
 
 

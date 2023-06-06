@@ -117,9 +117,9 @@ if (isset($_GET['id'])) {
             <div class="info">
 
 <div class="custom-dropdown">
-  <button class="custom-dropbtn">Weekly</button>
+  <button class="custom-dropbtn">Monthly</button>
   <div class="custom-dropdown-content">
-    <a href="monthly.php?id=<?php echo $user_id; ?>">Monthly</a>
+    <a href="view_reports.php?id=<?php echo $user_id; ?>">Weekly</a>
   </div>
 </div>
                 <div class="profile-container">
@@ -132,30 +132,18 @@ if (isset($_GET['id'])) {
                     </div> 
                 </div>
             </div>
-        <form method="POST" id="searchForm">
-        <label for="status">Month:</label>
-        <select id="status" name="status">
-          <option value="current_month">Current Month</option>
-          <option value="January">January</option>
-          <option value="February">February</option>
-          <option value="March">March</option>
-          <option value="April">April</option>
-          <option value="May">May</option>
-          <option value="June">June</option>
-          <option value="July">July</option>
-          <option value="August">August</option>
-          <option value="September">September</option>
-          <option value="October">October</option>
-          <option value="November">November</option>
-          <option value="December">December</option>
-        </select>
-        <button name="btn_search" type="submit">Search</button>
-      </form>
+
+<form method="POST" id="searchForm">
+  <label for="date">Year</label>
+  <input type="text" id="year" name="year" size="2">
+  <br>
+  <button name="btn_search" type="submit">Search</button>
+</form>
         </div>
 
 <div class="report_type">
   
-<a>Weekly Summary Report</a>
+<a>Monthly Summary Report</a>
 
 </div>
 
@@ -164,8 +152,7 @@ if (isset($_GET['id'])) {
         <table>
             <thead>
                 <tr>
-                    <th>Week</th>
-                    <th>Days</th>
+                    <th>Month</th>
                     <th>Absences</th>
                 </tr>
             </thead>
@@ -180,98 +167,107 @@ if (isset($_GET['id'])) {
 </div>
 
 <script>
-  // Function to calculate the start and end dates of each week in a given month
-  function calculateWeeks() {
-    var currentDate = new Date();
-    var currentYear = currentDate.getFullYear();
-    var tableBody = document.getElementById("tableBody");
+// Function to calculate the absence count for each month
+function calculateMonths(year) {
+  var tableBody = document.getElementById("tableBody");
 
-    var selectedMonth = document.getElementById("status").value;
-    var monthIndex;
+  tableBody.innerHTML = ""; // Clear previous table rows
 
-    if (selectedMonth === "current_month") {
-      monthIndex = currentDate.getMonth();
-    } else {
-      monthIndex = new Date(selectedMonth + " 1, " + currentYear).getMonth();
-    }
+  var promises = []; // Array to store the AJAX promises
 
-    var firstDayOfMonth = new Date(currentYear, monthIndex, 1);
-    var lastDayOfMonth = new Date(currentYear, monthIndex + 1, 0);
-    var currentDay = new Date(firstDayOfMonth);
+  for (var monthCounter = 0; monthCounter < 12; monthCounter++) {
+    (function() {
+      var user_id = <?php echo isset($_GET['id']) ? $_GET['id'] : 'null'; ?>;
+      var monthRow = document.createElement("tr");
+      var monthCell = document.createElement("td");
+      var absencesCell = document.createElement("td");
 
-    tableBody.innerHTML = ""; // Clear previous table rows
+      var monthName = new Date(year, monthCounter, 1).toLocaleString("default", {
+        month: "long"
+      });
 
-    var weekCounter = 0; // Counter to limit to four weeks
-    var totalAbsences = 0; // Variable to store the total absence count
+      monthCell.textContent = monthName;
 
-    while (currentDay <= lastDayOfMonth && weekCounter < 4) {
-      (function () {
-        var user_id = <?php echo isset($_GET['id']) ? $_GET['id'] : 'null'; ?>;
-        var weekRow = document.createElement("tr");
-        var weekCell = document.createElement("td");
-        var daysCell = document.createElement("td");
-        var absencesCell = document.createElement("td");
+      // Make an AJAX request to count the absences for the current month
+      var xhr = new XMLHttpRequest();
+      var startDate = year + "-" + (monthCounter + 1) + "-01";
+      var endDate = year + "-" + (monthCounter + 1) + "-31";
 
-        var weekNumber = Math.ceil((currentDay.getDate() + firstDayOfMonth.getDay() + 1) / 7); // Add 1 day to start 1 day ahead
+      var requestData = {
+        startDate: startDate,
+        endDate: endDate,
+        user_id: user_id
+      };
 
-        weekCell.textContent = "Week " + weekNumber;
+      xhr.open("POST", "check_absences.php", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
 
-        var startOfWeek = new Date(currentDay);
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Add 1 day to start 1 day ahead
-        var endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(endOfWeek.getDate() + 6);
-
-        var startDate = startOfWeek.toISOString().slice(0, 10);
-        var endDate = endOfWeek.toISOString().slice(0, 10);
-        daysCell.textContent = startDate + " to " + endDate;
-
-        // Make an AJAX request to count the absences for the current date range
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
+      var promise = new Promise(function(resolve, reject) {
+        xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
               var absencesCount = parseInt(xhr.responseText);
               absencesCell.textContent = absencesCount;
-              totalAbsences += absencesCount; // Update the total absence count
-              document.getElementById("totalAbsences").textContent = totalAbsences; // Update the total absence count display
+              resolve(absencesCount); // Resolve the promise with the absence count
             } else {
-              absencesCell.textContent = "Error";
+              reject("Error");
             }
           }
         };
+      });
 
-        xhr.open("POST", "check_absences.php", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(requestData));
 
-        var requestData = {
-          startDate: startDate,
-          endDate: endDate,
-          user_id: user_id
-        };
+      monthRow.appendChild(monthCell);
+      monthRow.appendChild(absencesCell);
+      tableBody.appendChild(monthRow);
 
-        xhr.send(JSON.stringify(requestData));
-
-        weekRow.appendChild(weekCell);
-        weekRow.appendChild(daysCell);
-        weekRow.appendChild(absencesCell);
-        tableBody.appendChild(weekRow);
-
-        currentDay.setDate(currentDay.getDate() + 7);
-        weekCounter++;
-      })();
-    }
+      promises.push(promise); // Add the promise to the array
+    })();
   }
+
+  // Return a promise that resolves when all AJAX requests are complete
+  return Promise.all(promises);
+}
+
+// Function to calculate the total absence count for the selected year
+function calculateTotalAbsences(year) {
+  var user_id = <?php echo isset($_GET['id']) ? $_GET['id'] : 'null'; ?>;
+  var totalAbsences = 0;
+
+  calculateMonths(year)
+    .then(function(absenceCounts) {
+      // Calculate the total absence count
+      totalAbsences = absenceCounts.reduce(function(sum, count) {
+        return sum + count;
+      }, 0);
+
+      // Display the total absence count
+      var totalAbsencesElement = document.getElementById("totalAbsences");
+      totalAbsencesElement.textContent = totalAbsences;
+    })
+    .catch(function(error) {
+      console.log("Error calculating total absences:", error);
+    });
+}
 
 // Event listener for form submission
 document.getElementById("searchForm").addEventListener("submit", function(event) {
   event.preventDefault(); // Prevent form submission
 
-  calculateWeeks(); // Generate the table based on the selected month
+  var yearInput = document.getElementById("year");
+  var selectedYear = yearInput.value;
+
+  calculateTotalAbsences(selectedYear); // Calculate the total absence count
 });
-calculateWeeks();
-    </script>
+
+// Get the current year and calculate the total absence count
+var currentYear = new Date().getFullYear();
+calculateTotalAbsences(currentYear);
+</script>
 
     <a href="#" class="download-button">Download</a>
+
 
 
 

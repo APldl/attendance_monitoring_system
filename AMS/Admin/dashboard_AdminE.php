@@ -59,7 +59,16 @@
   
             <h2>Filter users</h2>
             <ul>
-            <li><a href="dashboard_AdminA.php">Users with no school department</a></li>
+            <li><a href="dashboard_Admin2.php">Attendance Checker</a></li>
+            </ul>
+                        <ul>
+            <li><a href="dashboard_Admin3.php">Faculty Encoder</a></li>
+            </ul>
+                        <ul>
+            <li><a href="dashboard_Admin4.php">Faculty Head</a></li>
+            </ul>
+                        <ul>
+            <li><a href="dashboard_Admin5.php">Payroll</a></li>
             </ul>
             <h2>Schools</h2>
             <ul>

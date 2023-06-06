@@ -94,18 +94,18 @@ include "connection.php";
       <ul>
         <li><a href="dashboard_FM.php">View Class Schedule</a></li>
         <li><a href="#">View Attendance Records</a></li>
-        <li><a href="#">View Requests</a></li>
+        <li><a href="#">View Approved Requests</a></li>
       </ul>
       <h2>Make Request</h2>
       <ul>
-        <li><a href="#">Make Up Class</a></li>
-        <li><a href="#">Substitution</a></li>
+        <li><a href="make_request.php">Make Up Class</a></li>
+        <li><a href="make_sub.php">Substitution</a></li>
       </ul>
     </div>
     <div class="main_content">
      
       <div class="info">
-        <div>lorem lorem</div>
+        <div></div>
       </div>
     </div>
   </div>
@@ -227,8 +227,6 @@ if (mysqli_num_rows($table) > 0) {
 
 
 </body>
-
-
 
 
   <title>Attendance</title>

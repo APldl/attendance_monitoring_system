@@ -13,7 +13,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="ACstyle.css">
+    <link rel="stylesheet" href="AdminStyle.css">
     <title>
         
     </title>
@@ -56,9 +56,23 @@
 
     <div class="wrapper">
         <div class="sidebar">
+  
+            <h2>Filter users</h2>
+            <ul>
+            <li><a href="dashboard_Admin2.php">Attendance Checker</a></li>
+            </ul>
+                        <ul>
+            <li><a href="dashboard_Admin3.php">Faculty Encoder</a></li>
+            </ul>
+                        <ul>
+            <li><a href="dashboard_Admin4.php">Faculty Head</a></li>
+            </ul>
+                        <ul>
+            <li><a href="dashboard_Admin5.php">Payroll</a></li>
+            </ul>
             <h2>Schools</h2>
             <ul>
-                <li><a href="#">School of Engineering</a></li>
+                <li><a href="dashboard_AdminE.php">School of Engineering</a></li>
             </ul>
         
         </div>
@@ -69,32 +83,25 @@
         </div>
     </div>
 
-<ul class="user-list">
-    <?php
-    $queryRole = "SELECT * FROM user WHERE role_id = 1";
-    $list = mysqli_query($conn, $queryRole);
+    <ul class="user-list">
+        <?php
 
-    while ($row = mysqli_fetch_assoc($list)) {
-        $fullname = $row['user_fullname'];
-        $user_id = $row['user_id'];
+        $queryRole = "SELECT * FROM user WHERE role_id = 3";
+        $list = mysqli_query($conn, $queryRole);
 
-        // Query to check the combined count of new notifications
-        $queryNewNotifications = "SELECT (SELECT COUNT(*) FROM faculty_attendance WHERE user_id = $user_id AND new = 1) + (SELECT COUNT(*) FROM request WHERE user_id = $user_id AND new = 1 AND (sub_professor = '' OR sub_professor IS NULL)) + (SELECT COUNT(*) FROM request WHERE user_id = $user_id AND new = 1 AND sub_professor <> '')";
-        $resultNewNotifications = mysqli_query($conn, $queryNewNotifications);
-        $newNotificationsCount = mysqli_fetch_row($resultNewNotifications)[0];
-
+        while ($row = mysqli_fetch_assoc($list)) {
+            $fullname = $row['user_fullname'];
+            $user_id = $row['user_id'];
+            //$profile_picture = $row['profile_picture'];
         ?>
-        <a href="view_option.php?id=<?php echo $user_id; ?>">
-            <li class="user-item">
-                <img class="user-icon" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Icon">
-                <div class="user-name"><?php echo $fullname; ?></div>
-                <?php if ($newNotificationsCount > 0) { ?>
-                    <div class="red-circle">!</div>
-                <?php } ?>
-            </li>
-        </a>
-    <?php } ?>
-</ul>
+<a href="edit_user.php?id=<?php echo $user_id; ?>">
+  <li class="user-item">
+    <img class="user-icon" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Icon">
+    <div class="user-name"><?php echo $fullname; ?></div>
+  </li>
+</a>
+        <?php } ?>
+    </ul>
 
 </body>
 </html>

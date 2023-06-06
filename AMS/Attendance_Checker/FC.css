@@ -378,3 +378,59 @@ ul.log-out {
       border: 1px solid black;
       padding: 0px;
     }
+
+
+
+
+
+
+    .views {
+        margin-left: 300px; /* add this line */
+        background-color: #f2f2f2;
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .views h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .views ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .views li {
+        margin-bottom: 10px;
+    }
+
+    .views li a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .views li a:hover {
+        text-decoration: underline;
+    }
+
+
+
+
+
+.red-circle {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 5px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}

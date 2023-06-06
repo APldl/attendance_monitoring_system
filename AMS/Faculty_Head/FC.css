@@ -49,7 +49,7 @@ background: #505962;
 .wrapper .sidebar{
   position:absolute;
   width: 250px;
-  height: 1000px;
+  height: 100%;
   background:#343A40;
   padding:30px 0;
 }
@@ -384,177 +384,50 @@ ul.log-out {
 
 
 
-    .dropdown {
-  position: relative;
-}
-
-.dropdown-toggle {
-  display: block;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #343A40;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 5px 0;
-  text-decoration: none;
-  color: #333;
-}
-
-.dropdown-content a:hover {
-  background-color: #343A40;
-}
-
-
-.weekTable {
-              display: block;
-            margin: 20px auto;
-            max-width: 800px;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            margin-left: 300px; /* add this line */
-}
-
-        td{
-            margin-left: 100px;
-            padding-left: 120px;
-            padding: 10px; /* Adjust the margin value as per your preference */
-        }
-        th:nth-child(2),
-        td:nth-child(2) {
-            padding-left: 180px; /* Adjust the padding value as per your preference */
-        }
-        th:nth-child(3),
-        td:nth-child(3) {
-            padding-left: 200px; /* Adjust the padding value as per your preference */
-        }
-        th:nth-child(3) {
-          padding-left: 175px
-        }
-        .column {
-            margin-right: 20px; /* Adjust the margin value as per your preference */
-        }
-
-
-    .download-button {
-      background-color: #ffcc00;
-      color: white;
-      padding: 12px 20px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      margin-left: 950px;
+    .views {
+        margin-left: 300px; /* add this line */
+        background-color: #f2f2f2;
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-        .download-button:hover {
-      background-color: #e6b800;
+
+    .views h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .views ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .views li {
+        margin-bottom: 10px;
+    }
+
+    .views li a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .views li a:hover {
+        text-decoration: underline;
     }
 
 
-
-
-.custom-dropdown {
+    .red-circle {
   position: relative;
   display: inline-block;
-  float: right;
-  padding: 10px;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 5px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
 }
-
-.custom-dropdown-content {
-  display: none;
-  position: absolute;
-  min-width: 160px;
-  z-index: 1;
-}
-
-.custom-dropdown-content a {
-  color: black;
-}
-
-.custom-dropdown:hover .custom-dropdown-content {
-  display: block;
-  box-sizing: border-box;
-  width: 100px;
-}
-.custom-dropdown-content a {
-  outline: 2px solid black;
-  box-sizing: border-box;
-}
-
-.custom-dropbtn {
-  width: 50px;
-  height: 25px;
-}
-
-
-        .report_type {
-            display: block;
-            font-size: 25px;
-            max-width: 800px;
-            padding: 1px;
-            margin-left: 300px; /* add this line */
-        }
-
-
-.dropdown2 {
-  margin-left: auto;
-}
-
-.dropdown2 label {
-  margin-right: 5px;
-}
-
-/* Styles for the filter dropdown */
-.dropdown2 {
-  position: relative;
-  display: flex;
-}
-
-.dropbtn {
-  background-color: #f0f0f0;
-
-  padding: 8px 16px;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropdown-content2 {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 120px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-.dropdown-content2 a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown2:hover .dropdown-content2 {
-  display: block;
-}
-
-
-        
