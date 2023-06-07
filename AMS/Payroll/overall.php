@@ -93,7 +93,6 @@
   <a> <span id="currentWeekDates" style="display: none;"></span></a>
 </div>
 
-
 <div class="weekTable">
   <table>
     <thead>
@@ -112,6 +111,8 @@
   <a>Total Absences: <span id="totalAbsences"></span></a>
 </div>
 
+
+<a href="#" class="download-button" onclick="downloadTable()">Download</a>
 <script>
   // Fetch data from server-side PHP script using AJAX
   function fetchData() {
@@ -236,8 +237,35 @@
   function hideCurrentWeekDates() {
     document.getElementById('currentWeekDates').style.display = 'none';
   }
+
+
+
+    // Convert table data to CSV format
+  function convertToCSV() {
+    const table = document.querySelector('.weekTable table');
+    const headers = Array.from(table.querySelectorAll('th')).map(header => header.textContent);
+    const rows = Array.from(table.querySelectorAll('tbody tr')).map(row =>
+      Array.from(row.querySelectorAll('td')).map(cell => cell.textContent)
+    );
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+    return csvContent;
+  }
+
+  // Initiate the download with the generated CSV data
+  function downloadTable() {
+    const csvContent = convertToCSV();
+    const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'table_data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 </script>
-    <a href="#" class="download-button">Download</a>
 
 
 </body>

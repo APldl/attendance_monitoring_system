@@ -225,3 +225,20 @@ ul.log-out {
   font-size: 30px;
   margin-left: 300px;
 }
+
+    .download-button {
+      background-color: #ffcc00;
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      margin-left: 1150px;
+    }
+        .download-button:hover {
+      background-color: #e6b800;
+    }
