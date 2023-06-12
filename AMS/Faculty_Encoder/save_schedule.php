@@ -65,9 +65,9 @@
   }
 
 if (isset($error_message)) {
-  header("Location: edit_sched.php?id=$user_id&error_message=$error_message&show_alert=1");
+  header("Location: edit_sched_function.php?id=$user_id&error_message=$error_message&show_alert=1");
 } else {
-  header("Location: edit_sched.php?id=$user_id&message=$message");
+  header("Location: edit_sched_function.php?id=$user_id&message=$message");
 }
 exit();
 ?> 

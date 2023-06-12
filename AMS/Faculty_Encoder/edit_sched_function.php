@@ -54,6 +54,12 @@ if (isset($message)) {
 }
 ?>
 
+<?php if (isset($_GET['show_alert']) && $_GET['show_alert'] == 1): ?>
+  <script>
+    alert("<?php echo $_GET['error_message']; ?>");
+  </script>
+<?php endif; ?>
+
 
 <script type="text/javascript">
   function logout(){
@@ -195,8 +201,11 @@ if (isset($message)) {
 
     <button type="button" onclick="addRow()">Add Row</button>
     <button type="submit">Save</button>
+
+<button type="button" onclick="exportSchedule()">Export</button>
   </form>
-</div>
+  <input type="file" id="file-input" style="display: none;">
+<button type="button" onclick="document.getElementById('file-input').click(); importSchedule();">Import</button>
 </div>
 
 <script>
@@ -257,6 +266,145 @@ function addRow() {
   row.appendChild(cell9);
 
   tbody.appendChild(row);
+}
+</script>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+function getUserIdFromUrl() {
+  var url = window.location.href;
+  var index = url.indexOf('?id=');
+  if (index === -1) {
+    return null; // If 'id' parameter is not found in the URL
+  }
+  var user_id = url.slice(index + 4);
+  return user_id;
+}
+
+function importSchedule() {
+  console.log('Import button clicked');
+  var fileInput = document.getElementById('file-input');
+  var user_id = getUserIdFromUrl();
+
+  fileInput.addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var contents = e.target.result;
+      var rows = contents.split(/\r?\n/); // Handle different line break characters
+
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i].trim(); // Trim the row content
+
+        if (row !== '') {
+          var columns = row.split(',');
+
+          if (columns.length === 7) {
+            var subjectCode = columns[0].trim();
+            var subjectUnits = parseInt(columns[1].trim());
+            var scheduleDay = columns[2].trim();
+            var section = columns[3].trim();
+            var startTime = columns[4].trim();
+            var endTime = columns[5].trim();
+            var room = columns[6].trim();
+
+            // Perform the database insertion using AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'save_schedule_import.php?id=' + encodeURIComponent(user_id), true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                // Handle the response from the server if needed
+                console.log(xhr.responseText);
+              }
+            };
+
+            var data = 'subject_code[]=' + encodeURIComponent(subjectCode) +
+                       '&subject_units[]=' + encodeURIComponent(subjectUnits) +
+                       '&schedule_day[]=' + encodeURIComponent(scheduleDay) +
+                       '&section[]=' + encodeURIComponent(section) +
+                       '&schedule_time_start[]=' + encodeURIComponent(startTime) +
+                       '&schedule_time_end[]=' + encodeURIComponent(endTime) +
+                       '&room[]=' + encodeURIComponent(room);
+
+            xhr.send(data);
+          } else {
+            console.log('Invalid row format:', row);
+          }
+        }
+      }
+
+    };
+
+    reader.readAsText(file);
+  });
+
+      // Refresh the page or perform any necessary actions after importing
+      // Delay the page reload by 1 second (1000 milliseconds)
+      setTimeout(function() {
+        location.reload();
+      }, 5000);
+
+  
+}
+
+function exportSchedule() {
+  // Get the table element
+  var table = document.getElementById("table-body");
+
+  // Create a CSV string to hold the table data
+  var csvString = "";
+
+  // Get column names
+  var columnNames = [];
+  var headerRow = table.previousElementSibling.getElementsByTagName("th");
+  for (var i = 1; i < headerRow.length; i++) {
+    var columnName = headerRow[i].textContent;
+    columnNames.push(columnName);
+  }
+
+  // Add column names to the CSV string
+  csvString += '"' + columnNames.join('","') + '"\n';
+
+  // Iterate over table rows
+  for (var i = 0; i < table.rows.length; i++) {
+    var row = table.rows[i];
+
+    // Skip rows that have been marked for deletion
+    if (!row.classList.contains("deleted-row")) {
+      // Iterate over row cells
+      for (var j = 1; j < row.cells.length; j++) {
+        var cell = row.cells[j];
+        var cellValue = cell.querySelector("input").value;
+
+        // Escape double quotes in cell values
+        cellValue = cellValue.replace(/"/g, '""');
+
+        // Enclose cell value in double quotes
+        csvString += '"' + cellValue + '",';
+      }
+
+      // Remove trailing comma and add line break after each row
+      csvString = csvString.slice(0, -1) + "\n";
+    }
+  }
+
+  // Create a dummy anchor element to download the CSV file
+  var downloadLink = document.createElement("a");
+  downloadLink.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csvString);
+  downloadLink.download = "schedule.csv";
+
+  // Trigger the download
+  downloadLink.click();
 }
 </script>
 

@@ -222,7 +222,7 @@ nav ul li a{
         .container-tb {
       max-width: 820px;
       margin: 0 auto;
-      margin-right: 230px;
+      margin-left: 280px;
       font-family: Arial, sans-serif;
 
     }
@@ -232,6 +232,7 @@ nav ul li a{
       width: 100%;
       max-width: 820px;
       margin: 0 auto;
+      margin-left: 10px;
     }
 
     .table th,
