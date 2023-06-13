@@ -99,7 +99,7 @@ mysqli_query($conn, $queryUpdateNewColumn);
       <ul>
         <li><a href="dashboard_FM.php">View Class Schedule</a></li>
         <li><a href="view_attendance.php">View Attendance Records</a></li>
-        <li><a href="#">View Approved Requests</a></li>
+        <li><a href="view_approved.php">View Approved Requests</a></li>
       </ul>
       <h2>Make Request</h2>
       <ul>

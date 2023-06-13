@@ -207,7 +207,7 @@ if (isset($_POST['btn_search'])) {
   $result = mysqli_query($conn, $sql);
   if (mysqli_num_rows($result) > 0) {
     echo "<table>";
-    echo "<tr><th>Date</th><th>Subject Code</th><th>Room</th><th>Time In</th><th>Time Out</th><th>Schedule Time</th><th>Notes</th><th>Status</th></tr>";
+    echo "<tr><th><a href='#' onclick='sortTable(0)'>Date</a></th><th><a href='#' onclick='sortTable(1)'>Subject Code</a></th><th><a href='#' onclick='sortTable(2)'>Room</a></th><th><a href='#' onclick='sortTable(3)'>Time In</a></th><th><a href='#' onclick='sortTable(4)'>Time Out</a></th><th><a href='#' onclick='sortTable(5)'>Schedule Time</a></th><th><a href='#' onclick='sortTable(6)'>Notes</a></th><th><a href='#' onclick='sortTable(7)'>Status</a></th></tr>";
     while ($row = mysqli_fetch_assoc($result)) {
       echo "<tr>";
       echo "<td class='table__cell' style='width: 100px;'>" . date("Y-m-d", strtotime($row["date"])) . "</td>";
@@ -235,7 +235,7 @@ if (isset($_POST['btn_search'])) {
   $result = mysqli_query($conn, $sql);
   if (mysqli_num_rows($result) > 0) {
     echo "<table>";
-    echo "<tr><th>Date</th><th>Subject Code</th><th>Room</th><th>Time In</th><th>Time Out</th><th>Schedule Time</th><th>Notes</th><th>Status</th></tr>";
+    echo "<tr><th><a href='#' onclick='sortTable(0)'>Date</a></th><th><a href='#' onclick='sortTable(1)'>Subject Code</a></th><th><a href='#' onclick='sortTable(2)'>Room</a></th><th><a href='#' onclick='sortTable(3)'>Time In</a></th><th><a href='#' onclick='sortTable(4)'>Time Out</a></th><th><a href='#' onclick='sortTable(5)'>Schedule Time</a></th><th><a href='#' onclick='sortTable(6)'>Notes</a></th><th><a href='#' onclick='sortTable(7)'>Status</a></th></tr>";
     while ($row = mysqli_fetch_assoc($result)) {
       echo "<tr>";
       echo "<td class='table__cell' style='width: 100px;'>" . date("Y-m-d", strtotime($row["date"])) . "</td>";
@@ -255,38 +255,44 @@ if (isset($_POST['btn_search'])) {
   }
 }
 ?>
+
+
 <script>
-function downloadTable() {
-  var fullName = "<?php echo $fullname; ?>";
-  var currentDate = new Date().toISOString().slice(0, 10);
-
-  var table = document.getElementsByTagName("table")[0];
-  var rows = table.getElementsByTagName("tr");
-
-  var csvContent = "data:text/csv;charset=utf-8,";
-  var headerRow = rows[0];
-  var headerCells = headerRow.getElementsByTagName("th");
-  var headerData = [];
-  for (var i = 0; i < headerCells.length; i++) {
-    headerData.push(headerCells[i].innerText);
-  }
-  csvContent += headerData.join(",") + "\n";
-
-  for (var i = 1; i < rows.length; i++) {
-    var rowData = [];
-    var cells = rows[i].getElementsByTagName("td");
-    for (var j = 0; j < cells.length; j++) {
-      rowData.push(cells[j].innerText);
+function sortTable(column) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementsByTagName("table")[0];
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[column];
+      y = rows[i + 1].getElementsByTagName("td")[column];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
     }
-    csvContent += rowData.join(",") + "\n";
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
   }
-
-  var encodedUri = encodeURI(csvContent);
-  var link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", fullName + "_" + currentDate + ".csv");
-  document.body.appendChild(link);
-  link.click();
 }
 </script>
 

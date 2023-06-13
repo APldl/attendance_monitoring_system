@@ -29,6 +29,10 @@ include "connection.php";
         // handle schedule not found error here
     }
 
+// Update the 'new' column to 0 for the user with the specified ID
+$queryUpdateNewColumn = "UPDATE faculty_attendance SET `new` = 0 WHERE user_id = $user_id";
+mysqli_query($conn, $queryUpdateNewColumn);
+
 ?>
 
 
@@ -114,50 +118,48 @@ include "connection.php";
           <p><span class="not-bold">School Department:</span> <span><?php echo $school_department; ?></span></p>
         </div>
         <form method="POST">
-        <label for="status">Month:</label>
-        <select id="status" name="status">
-          <option value=""></option>
-          <option value="January">January</option>
-          <option value="February">February</option>
-          <option value="March">March</option>
-          <option value="April">April</option>
-          <option value="May">May</option>
-          <option value="June">June</option>
-          <option value="July">July</option>
-          <option value="August">August</option>
-          <option value="September">September</option>
-          <option value="October">October</option>
-          <option value="November">November</option>
-          <option value="December">December</option>
-        </select>
-        <br>
-        <label for="date">Year</label>
-        <input type="text" id="year" name="year" size="2">
-        <br>
-        <button name="btn_search" type="submit">Search</button>
-
-      </form>
+          <label for="status">Month:</label>
+          <select id="status" name="status">
+            <option value=""></option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+          <br>
+          <label for="date">Year</label>
+          <input type="text" id="year" name="year" size="2">
+          <br>
+          <button name="btn_search" type="submit">Search</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
 <?php
-require 'connection.php';
-
-$statusOptions = array("Pending", "Present", "Absent", "Absent w/ Pay");
-
 if (isset($_POST['btn_search'])) {
   $month = mysqli_real_escape_string($conn, $_POST['status']);
   $year = mysqli_real_escape_string($conn, $_POST['year']);
 
   if (empty($month) && empty($year)) {
-    $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' ORDER BY date DESC";
+    $currentDate = date("Y-m-d"); // Get current date in the format "YYYY-MM-DD"
+
+    // Construct the SQL query to fetch attendance records for the current date
+    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND date = '$currentDate' ORDER BY date DESC";
   } elseif (empty($year)) {
     // Convert month string to numeric value
     $month_num = date_parse($month)['month'];
 
-    $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' ORDER BY date DESC";
+    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' ORDER BY date DESC";
   } else {
     // Convert month string to numeric value
     $month_num = date_parse($month)['month'];
@@ -165,76 +167,100 @@ if (isset($_POST['btn_search'])) {
     // Convert year string to numeric value
     $year_num = intval($year);
 
-    $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' AND YEAR(date) = '$year_num' ORDER BY date DESC";
+    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' AND YEAR(date) = '$year_num' ORDER BY date DESC";
   }
 
-  $table = mysqli_query($conn, $sql);
-  if (mysqli_num_rows($table) > 0) {
-    echo "<form action='process.php' method='post'>";
+  $result = mysqli_query($conn, $sql);
+  if (mysqli_num_rows($result) > 0) {
     echo "<table>";
-    echo "<tr><th>Date</th><th>Subject Code</th><th>Room</th><th>Time In</th><th>Time Out</th><th>Schedule Time</th><th>Notes</th><th>Status</th></tr>";
-    while ($row = mysqli_fetch_assoc($table)) {
+    echo "<tr><th><a href='#' onclick='sortTable(0)'>Date</a></th><th><a href='#' onclick='sortTable(1)'>Subject Code</a></th><th><a href='#' onclick='sortTable(2)'>Room</a></th><th><a href='#' onclick='sortTable(3)'>Time In</a></th><th><a href='#' onclick='sortTable(4)'>Time Out</a></th><th><a href='#' onclick='sortTable(5)'>Schedule Time</a></th><th><a href='#' onclick='sortTable(6)'>Notes</a></th><th><a href='#' onclick='sortTable(7)'>Status</a></th></tr>";
+    while ($row = mysqli_fetch_assoc($result)) {
       echo "<tr>";
-      echo "<td class='table__cell'>" . $row["date"] . "</td>";
+      echo "<td class='table__cell' style='width: 100px;'>" . date("Y-m-d", strtotime($row["date"])) . "</td>";
       echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
       echo "<td class='table__cell'>" . $row["room"] . "</td>";
       echo "<td class='table__cell'>" . $row["Time_In"] . "</td>";
       echo "<td class='table__cell'>" . $row["Time_Out"] . "</td>";
       echo "<td class='table__cell'>" . $row["schedule_time"] . "</td>";
-      echo "<td class='table__cell'>";
-      echo "<textarea name='notes[]' class='notes-textarea'>" . $row["notes"] . "</textarea>";
-      echo "</td>";
-      echo "<td class='table__cell'>";
-      echo "<select name='status[]' class='status-dropdown'>";
-      foreach ($statusOptions as $option) {
-        $selected = ($row['status'] === $option) ? "selected" : "";
-        echo "<option value='$option' $selected>$option</option>";
-      }
-      echo "</select>";
-      echo "</td>";
-      echo "<input type='hidden' name='attendance_id[]' value='" . $row['attendance_id'] . "'>";
+      echo "<td class='table__cell'>" . $row["notes"] . "</td>";
+      echo "<td class='table__cell'>" . $row["status"] . "</td>";
       echo "</tr>";
     }
     echo "</table>";
-    echo "<input type='submit' name='btn_submit' value='Submit' class='button-class'>";
-    echo "</form>";
+    echo '<button class="download-button" onclick="downloadTable()">Download</button>';
   } else {
     echo "<p class='attendance-not-found'>No attendance found for the selected month and year.</p>";
   }
 } else {
-  $sql = "SELECT attendance_id, date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' ORDER BY date DESC";
-  $table = mysqli_query($conn, $sql);
+  // No search button clicked, display records for current date by default
+  $currentDate = date("Y-m-d"); // Get current date in the format "YYYY-MM-DD"
 
-  echo "<form action='process.php' method='post'>";
-  echo "<table>";
-  echo "<tr><th>Date</th><th>Subject Code</th><th>Room</th><th>Time In</th><th>Time Out</th><th>Schedule Time</th><th>Notes</th><th>Status</th></tr>";
-  while ($row = mysqli_fetch_assoc($table)) {
-    echo "<tr>";
-    echo "<td class='table__cell'>" . $row["date"] . "</td>";
-    echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
-    echo "<td class='table__cell'>" . $row["room"] . "</td>";
-    echo "<td class='table__cell'>" . $row["Time_In"] . "</td>";
-    echo "<td class='table__cell'>" . $row["Time_Out"] . "</td>";
-    echo "<td class='table__cell'>" . $row["schedule_time"] . "</td>";
-    echo "<td class='table__cell'>";
-    echo "<textarea name='notes[]' class='notes-textarea'>" . $row["notes"] . "</textarea>";
-    echo "</td>";
-    echo "<td class='table__cell'>";
-    echo "<select name='status[]' class='status-dropdown'>";
-    foreach ($statusOptions as $option) {
-      $selected = ($row['status'] === $option) ? "selected" : "";
-      echo "<option value='$option' $selected>$option</option>";
+  // Construct the SQL query to fetch attendance records for the current date
+  $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND date = '$currentDate' ORDER BY date DESC";
+  
+  $result = mysqli_query($conn, $sql);
+  if (mysqli_num_rows($result) > 0) {
+    echo "<table>";
+    echo "<tr><th><a href='#' onclick='sortTable(0)'>Date</a></th><th><a href='#' onclick='sortTable(1)'>Subject Code</a></th><th><a href='#' onclick='sortTable(2)'>Room</a></th><th><a href='#' onclick='sortTable(3)'>Time In</a></th><th><a href='#' onclick='sortTable(4)'>Time Out</a></th><th><a href='#' onclick='sortTable(5)'>Schedule Time</a></th><th><a href='#' onclick='sortTable(6)'>Notes</a></th><th><a href='#' onclick='sortTable(7)'>Status</a></th></tr>";
+    while ($row = mysqli_fetch_assoc($result)) {
+      echo "<tr>";
+      echo "<td class='table__cell' style='width: 100px;'>" . date("Y-m-d", strtotime($row["date"])) . "</td>";
+      echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
+      echo "<td class='table__cell'>" . $row["room"] . "</td>";
+      echo "<td class='table__cell'>" . $row["Time_In"] . "</td>";
+      echo "<td class='table__cell'>" . $row["Time_Out"] . "</td>";
+      echo "<td class='table__cell'>" . $row["schedule_time"] . "</td>";
+      echo "<td class='table__cell'>" . $row["notes"] . "</td>";
+      echo "<td class='table__cell'>" . $row["status"] . "</td>";
+      echo "</tr>";
     }
-    echo "</select>";
-    echo "</td>";
-    echo "<input type='hidden' name='attendance_id[]' value='" . $row['attendance_id'] . "'>";
-    echo "</tr>";
+    echo "</table>";
+    echo '<button class="download-button" onclick="downloadTable()">Download</button>';
+  } else {
+    echo "<p class='attendance-not-found'>No attendance found for the selected month and year.</p>";
   }
-  echo "</table>";
-  echo "<input type='submit' name='btn_submit' value='Submit' class='button-class'>";
-  echo "</form>";
 }
 ?>
+
+
+<script>
+function sortTable(column) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementsByTagName("table")[0];
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[column];
+      y = rows[i + 1].getElementsByTagName("td")[column];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
 
 
 
