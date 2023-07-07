@@ -13,7 +13,7 @@ $currentDayOfWeek = date('l');
 //echo "Current Day of the Week: " . $currentDayOfWeek . "\n";
 
 // Script 1: Insert rows from schedule table
-$sql = "SELECT * FROM schedule WHERE schedule_day = '$currentDayOfWeek' AND TIME_FORMAT(schedule_time_start, '%H:%i') <= TIME_FORMAT('$currentTime', '%H:%i') AND (cooldown > '$currentTime' OR cooldown IS NULL)";
+$sql = "SELECT * FROM schedule WHERE schedule_day = '$currentDayOfWeek' AND TIME_FORMAT(schedule_time_start, '%H:%i') <= TIME_FORMAT('$currentTime', '%H:%i')";
 $result = $conn->query($sql);
 
 // Check if any rows are returned
@@ -21,7 +21,6 @@ if ($result->num_rows > 0) {
     // Iterate over the rows
     while ($row = $result->fetch_assoc()) {
         // Get the necessary values from the schedule table
-        $scheduleId = $row['schedule_id'];
         $subjectCode = $row['subject_code'];
         $userID = $row['user_id'];
         $scheduleTimeStart = $row['schedule_time_start'];
@@ -29,18 +28,20 @@ if ($result->num_rows > 0) {
         $room = $row['room'];
         $scheduleDay = $row['schedule_day'];
         $section = $row['section']; // Added section value
+        $scheduleId = $row['schedule_id']; // Added schedule_id value
 
         // Combine the start and end time into the desired format
         $scheduleTime = date('H:i', strtotime($scheduleTimeStart)) . ' - ' . date('H:i', strtotime($scheduleTimeEnd));
 
-        // Update the cooldown column in the schedule table only for the executed schedule
-        $updateSql = "UPDATE schedule SET cooldown = '$currentTime' WHERE schedule_id = '$scheduleId' AND user_id = '$userID' AND (cooldown > '$currentTime' OR cooldown IS NULL)";
+        // Check if the row already exists for the current date and schedule_id
+        $checkSql = "SELECT COUNT(*) as count FROM faculty_attendance WHERE date = '$currentDate' AND schedule_id = '$scheduleId'";
+        $checkResult = $conn->query($checkSql);
+        $checkRow = $checkResult->fetch_assoc();
+        $count = $checkRow['count'];
 
-        if ($conn->query($updateSql) === TRUE) {
-            //echo "Cooldown updated for schedule: schedule_id='$scheduleId'\n";
-
+        if ($count == 0) {
             // Insert a new row into the faculty_attendance table
-            $insertSql = "INSERT INTO faculty_attendance (subject_code, user_id, date, room, schedule_time, day, section) VALUES ('$subjectCode', '$userID', '$currentDate', '$room', '$scheduleTime', '$scheduleDay', '$section')";
+            $insertSql = "INSERT INTO faculty_attendance (subject_code, user_id, date, room, schedule_time, day, section, schedule_id) VALUES ('$subjectCode', '$userID', '$currentDate', '$room', '$scheduleTime', '$scheduleDay', '$section', '$scheduleId')";
 
             if ($conn->query($insertSql) === TRUE) {
                 //echo "New row added to faculty_attendance table successfully.\n";
@@ -48,15 +49,16 @@ if ($result->num_rows > 0) {
                 //echo "Error inserting row: " . $conn->error . "\n";
             }
         } else {
-            //echo "Error updating cooldown: " . $conn->error . "\n";
+            //echo "Rows already exist for the current date and schedule_id in faculty_attendance table.\n";
         }
     }
 } else {
-    //echo "No schedules found with passed time and cooldown for today.\n";
+    //echo "No schedules found with passed time for today.\n";
 }
 
+
 // Script 2: Insert rows from request table
-$sql = "SELECT * FROM request WHERE schedule_date <= '$currentDate' AND generate = 'active' AND TIME_FORMAT(schedule_time_start, '%H:%i') <= TIME_FORMAT('$currentTime', '%H:%i')";
+$sql = "SELECT * FROM request WHERE schedule_date <= '$currentDate' AND ((generate = 'active' AND (reason <> '' OR reason IS NULL) AND sub_professor IS NOT NULL) OR (generate = 'active' AND reason = '' AND sub_professor IS NULL) OR (generate = 'active' AND reason IS NULL AND sub_professor IS NULL)) AND TIME_FORMAT(schedule_time_start, '%H:%i') <= TIME_FORMAT('$currentTime', '%H:%i')";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -73,8 +75,18 @@ if ($result->num_rows > 0) {
 
         $scheduleTime = date('H:i', strtotime($scheduleTimeStart)) . ' - ' . date('H:i', strtotime($scheduleTimeEnd));
 
+        echo "Processing request with request ID: $requestID\n";
+        echo "Subject Code: $subjectCode\n";
+        echo "Schedule Date: $scheduleDate\n";
+        echo "Schedule Time: $scheduleTime\n";
+        echo "Room: $room\n";
+        echo "Sub Professor: $subProfessor\n";
+        echo "User ID: $userID\n";
+        echo "Section: $section\n";
+
         if ($subProfessor === null) {
             $subID = 'NULL';
+            echo "Sub ID (User ID of Sub Professor): NULL\n";
         } else {
             // Retrieve the user_id based on the sub_professor's user_fullname
             $professorSql = "SELECT user_id FROM user WHERE user_fullname = '$subProfessor'";
@@ -83,7 +95,9 @@ if ($result->num_rows > 0) {
             if ($professorResult->num_rows > 0) {
                 $professorRow = $professorResult->fetch_assoc();
                 $subID = $professorRow['user_id'];
+                echo "Sub ID (User ID of Sub Professor): $subID\n";
             } else {
+                echo "Sub Professor not found in user table. Skipping request.\n";
                 continue;
             }
         }
@@ -93,13 +107,16 @@ if ($result->num_rows > 0) {
         $insertSql = "INSERT INTO faculty_attendance (subject_code, user_id, date, room, schedule_time, day, request_id, section, sub_id) VALUES ('$subjectCode', '$userID', '$scheduleDate', '$room', '$scheduleTime', '$dayOfWeek', '$requestID', '$section', $subID)";
 
         if ($conn->query($insertSql) === TRUE) {
+            echo "Row inserted into faculty_attendance table successfully.\n";
             $requestID = $row['request_id'];
             $updateSql = "UPDATE request SET generate = 'inactive' WHERE request_id = '$requestID'";
             $conn->query($updateSql);
+        } else {
+            echo "Error inserting row into faculty_attendance table: " . $conn->error . "\n";
         }
     }
 } else {
-    
+    echo "No requests found in the given time interval or with 'generate' column set to 'active'.\n";
 }
 
 // Script 3: Update rows in faculty_attendance table
