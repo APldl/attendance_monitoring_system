@@ -73,18 +73,8 @@ if ($result->num_rows > 0) {
 
         $scheduleTime = date('H:i', strtotime($scheduleTimeStart)) . ' - ' . date('H:i', strtotime($scheduleTimeEnd));
 
-        echo "Processing request with request ID: $requestID\n";
-        echo "Subject Code: $subjectCode\n";
-        echo "Schedule Date: $scheduleDate\n";
-        echo "Schedule Time: $scheduleTime\n";
-        echo "Room: $room\n";
-        echo "Sub Professor: $subProfessor\n";
-        echo "User ID: $userID\n";
-        echo "Section: $section\n";
-
         if ($subProfessor === null) {
             $subID = 'NULL';
-            echo "Sub ID (User ID of Sub Professor): NULL\n";
         } else {
             // Retrieve the user_id based on the sub_professor's user_fullname
             $professorSql = "SELECT user_id FROM user WHERE user_fullname = '$subProfessor'";
@@ -93,9 +83,7 @@ if ($result->num_rows > 0) {
             if ($professorResult->num_rows > 0) {
                 $professorRow = $professorResult->fetch_assoc();
                 $subID = $professorRow['user_id'];
-                echo "Sub ID (User ID of Sub Professor): $subID\n";
             } else {
-                echo "Sub Professor not found in user table. Skipping request.\n";
                 continue;
             }
         }
@@ -105,16 +93,13 @@ if ($result->num_rows > 0) {
         $insertSql = "INSERT INTO faculty_attendance (subject_code, user_id, date, room, schedule_time, day, request_id, section, sub_id) VALUES ('$subjectCode', '$userID', '$scheduleDate', '$room', '$scheduleTime', '$dayOfWeek', '$requestID', '$section', $subID)";
 
         if ($conn->query($insertSql) === TRUE) {
-            echo "Row inserted into faculty_attendance table successfully.\n";
             $requestID = $row['request_id'];
             $updateSql = "UPDATE request SET generate = 'inactive' WHERE request_id = '$requestID'";
             $conn->query($updateSql);
-        } else {
-            echo "Error inserting row into faculty_attendance table: " . $conn->error . "\n";
         }
     }
 } else {
-    echo "No requests found in the given time interval or with 'generate' column set to 'active'.\n";
+    
 }
 
 // Script 3: Update rows in faculty_attendance table
