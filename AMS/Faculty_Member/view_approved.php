@@ -21,12 +21,12 @@ $result = mysqli_query($conn, $query);
       margin: 0 auto;
       padding: 10px;
       font-family: Arial, sans-serif;
-      margin-right: 160px; /* add margin to move the container to the right */
+      margin-left: 370px; /* add margin to move the container to the right */
     }
 
     .table {
       border-collapse: collapse;
-      width: 110%;
+      width: 130%;
       margin-top: 20px;
     }
 
@@ -127,7 +127,8 @@ $result = mysqli_query($conn, $query);
         <th>Room</th>
         <th>Academic Year</th>
         <th>Substitute</th>
-        <th>Notes</th>
+        <th>Remarks</th>
+        <th>Reason</th>
         <th>Status</th>
       </tr>
     </thead>
@@ -152,6 +153,7 @@ if (mysqli_num_rows($result) > 0) {
     echo "<td>" . $row['academic_year'] . "</td>";
     echo "<td>" . $row['sub_professor'] . "</td>";
     echo "<td>" . $row['notes'] . "</td>";
+    echo "<td>" . $row['reason'] . "</td>";
     echo "<td>" . $row['status'] . "</td>";
     echo "</tr>";
     echo "<input type='hidden' name='request_id[]' value='" . $row['request_id'] . "'>";

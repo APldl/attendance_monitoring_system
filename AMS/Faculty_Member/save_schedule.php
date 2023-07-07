@@ -14,6 +14,7 @@ $sections = $_POST['section'];
 $schedule_time_starts = $_POST['schedule_time_start'];
 $schedule_time_ends = $_POST['schedule_time_end'];
 $rooms = $_POST['room'];
+$reasons = $_POST['reason'];
 
 $error_messages = array();
 
@@ -37,12 +38,12 @@ for ($i = 0; $i < count($subject_codes); $i++) {
 
   if (!empty($request_ids[$i])) {
     // Update existing row in the database
-    $sql = "UPDATE request SET subject_code='".$subject_codes[$i]."', subject_units='".$subject_units[$i]."', schedule_date='".$schedule_dates[$i]."', section='".$sections[$i]."', schedule_time_start='".$schedule_time_starts[$i]."', schedule_time_end='".$schedule_time_ends[$i]."', room='".$rooms[$i]."' WHERE request_id=".$request_ids[$i];
+    $sql = "UPDATE request SET subject_code='".$subject_codes[$i]."', subject_units='".$subject_units[$i]."', schedule_date='".$schedule_dates[$i]."', section='".$sections[$i]."', schedule_time_start='".$schedule_time_starts[$i]."', schedule_time_end='".$schedule_time_ends[$i]."', room='".$rooms[$i]."', reason='".$reasons[$i]."' WHERE request_id=".$request_ids[$i];
     mysqli_query($conn, $sql);
     $message = "Schedule updated successfully.";
   } else {
     // Insert new row in the database
-    $sql = "INSERT INTO request (user_id, subject_code, subject_units, schedule_date, section, schedule_time_start, schedule_time_end, room) VALUES ('".$user_id."', '".$subject_codes[$i]."', '".$subject_units[$i]."', '".$schedule_dates[$i]."', '".$sections[$i]."', '".$schedule_time_starts[$i]."', '".$schedule_time_ends[$i]."', '".$rooms[$i]."')";
+    $sql = "INSERT INTO request (user_id, subject_code, subject_units, schedule_date, section, schedule_time_start, schedule_time_end, room, reason) VALUES ('".$user_id."', '".$subject_codes[$i]."', '".$subject_units[$i]."', '".$schedule_dates[$i]."', '".$sections[$i]."', '".$schedule_time_starts[$i]."', '".$schedule_time_ends[$i]."', '".$rooms[$i]."', '".$reasons[$i]."')";
     mysqli_query($conn, $sql);
     $message = "Schedule added successfully.";
   }

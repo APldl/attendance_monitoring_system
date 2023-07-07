@@ -2,7 +2,32 @@
 include "connection.php";
 include "attendance_generator.php";
 
+    $user_id = $_GET['id'];
 
+    // retrieve the user details from the user table
+    $query_user = "SELECT * FROM user WHERE user_id = $user_id";
+    $result_user = mysqli_query($conn, $query_user);
+
+    if (mysqli_num_rows($result_user) > 0) {
+        $row_user = mysqli_fetch_assoc($result_user);
+        $fullname = $row_user['user_fullname'];
+        $school_department = $row_user['school_department'];
+        // add more user details here as needed
+    } else {
+        // handle user not found error here
+    }
+
+    // retrieve the schedule details from the schedule table
+    $query_schedule = "SELECT * FROM schedule WHERE user_id = $user_id";
+    $result_schedule = mysqli_query($conn, $query_schedule);
+
+    if (mysqli_num_rows($result_schedule) > 0) {
+        $row_schedule = mysqli_fetch_assoc($result_schedule);
+        $academic_year = $row_schedule['academic_year'];
+        // add more schedule details here as needed
+    } else {
+        // handle schedule not found error here
+    }
 
 // Update the 'new' column to 0 for the user with the specified ID
 $queryUpdateNewColumn = "UPDATE faculty_attendance SET `new` = 0 WHERE user_id = $user_id";
@@ -87,13 +112,18 @@ mysqli_query($conn, $queryUpdateNewColumn);
 </div>
 
 <div class="report_type">
-  <a>Overall Report</a>
+  <a>Individual Report</a>
 </div>
 
 <div class="wrapper2">
   <div class="main_content">
     <div class="info">
+      <div class="profile-container">
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Profile Picture">
         <div class="details">
+          <p><span class="not-bold">Faculty Name:</span> <span><?php echo $fullname; ?></span></p>
+          <p><span class="not-bold">Current Academic Year:</span> <span><?php echo $academic_year; ?></span></p>
+          <p><span class="not-bold">School Department:</span> <span><?php echo $school_department; ?></span></p>
         </div>
       </div>
     </div>
@@ -125,6 +155,7 @@ mysqli_query($conn, $queryUpdateNewColumn);
 </div>
   </div>
 </div>
+
 <?php
 $currentDate = date('Y-m-d');
 $userId = $user_id; // Replace this with the appropriate variable that holds the user ID
@@ -241,57 +272,44 @@ if (!$result) {
         <tr>
             <th class="sortable" data-column="0">Date</th>
             <th class="sortable" data-column="1">Day</th>
-            <th class="sortable" data-column="2">Faculty</th>
-            <th class="sortable" data-column="3">Department</th>
-            <th class="sortable" data-column="4">Subject</th>
-            <th class="sortable" data-column="5">Section</th>
-            <th class="sortable" data-column="6">Time</th>
-            <th class="sortable" data-column="7">Time-In</th>
-            <th class="sortable" data-column="8">Time-Out</th>
-            <th class="sortable" data-column="9">Room</th>
-            <th class="sortable" data-column="10">Status</th>
-            <th class="sortable" data-column="11">Remarks</th>
+            <th style="display: none;">Faculty</th>
+            <th style="display: none;">Department</th>
+            <th class="sortable" data-column="2">Subject</th>
+            <th class="sortable" data-column="3">Section</th>
+            <th class="sortable" data-column="4">Time</th>
+            <th class="sortable" data-column="5">Time-In</th>
+            <th class="sortable" data-column="6">Time-Out</th>
+            <th class="sortable" data-column="7">Room</th>
+            <th class="sortable" data-column="8">Status</th>
+            <th class="sortable" data-column="9">Remarks</th>
         </tr>
     </thead>
-<tbody>
-    <?php
-    while ($row = mysqli_fetch_assoc($result)) {
-        $userId = $row['user_id'];
-        
-        // Query to fetch the user details for the current row
-        $userQuery = "SELECT user_fullname, school_department FROM user WHERE user_id = '$userId'";
-        $userResult = mysqli_query($conn, $userQuery);
-        
-        if (!$userResult) {
-            die('User query failed: ' . mysqli_error($conn));
+    <tbody>
+        <?php
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $row['date'] . "</td>";
+            echo "<td>" . $row['day'] . "</td>";
+            echo "<td style=\"display: none;\">$fullname</td>";
+            echo "<td style=\"display: none;\">$school_department</td>";
+            echo "<td>" . $row['subject_code'] . "</td>";
+            echo "<td>" . $row['section'] . "</td>";
+            echo "<td>" . $row['schedule_time'] . "</td>";
+            echo "<td>" . $row['Time_In'] . "</td>";
+            echo "<td>" . $row['Time_Out'] . "</td>";
+            echo "<td>" . $row['room'] . "</td>";
+            echo "<td>" . $row['status'] . "</td>";
+            echo "<td><textarea name=\"remarks[]\" readonly>" . $row['notes'] . "</textarea></td>";
+            echo '<input type="hidden" name="attendance_id[]" value="' . $row['attendance_id'] . '">';
+            echo "</tr>";
         }
-        
-        $userRow = mysqli_fetch_assoc($userResult);
-        $fullname = $userRow['user_fullname'];
-        $school_department = $userRow['school_department'];
-        
-        echo "<tr>";
-        echo "<td>" . $row['date'] . "</td>";
-        echo "<td>" . $row['day'] . "</td>";
-        echo "<td>$fullname</td>";
-        echo "<td>$school_department</td>";
-        echo "<td>" . $row['subject_code'] . "</td>";
-        echo "<td>" . $row['section'] . "</td>";
-        echo "<td>" . $row['schedule_time'] . "</td>";
-        echo "<td>" . $row['Time_In'] . "</td>";
-        echo "<td>" . $row['Time_Out'] . "</td>";
-        echo "<td>" . $row['room'] . "</td>";
-        echo "<td>" . $row['status'] . "</td>";
-        echo "<td>" . $row['notes'] . "</td>";
-        echo "</tr>";
-    }
-            // Check if no rows were retrieved
+
+        // Check if no rows were retrieved
         if (mysqli_num_rows($result) === 0) {
-            echo "<tr><td colspan='12'>NO ATTENDANCE FOUND</td></tr>";
+            echo "<tr><td colspan='10'>NO ATTENDANCE FOUND</td></tr>";
         }
         ?>
-    
-</tbody>
+    </tbody>
 </table>
 </form>
 
@@ -394,6 +412,7 @@ if (!$result) {
   }
 
 </script>
+
 
 <script>
   // Get the checkbox elements

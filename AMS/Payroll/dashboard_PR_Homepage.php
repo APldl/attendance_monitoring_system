@@ -73,24 +73,25 @@
     </div>
 </div>
 
-    <ul class="user-list">
-        <?php
+    <div id="unique-identifier">
+        <span class="user-fullname">
+            <?php
+            date_default_timezone_set('Your_Timezone'); // Replace 'Your_Timezone' with the desired timezone
+            $currentTime = date('H:i:s');
+            $greeting = '';
 
-        $queryRole = "SELECT * FROM user WHERE role_id = 1";
-        $list = mysqli_query($conn, $queryRole);
-        while ($row = mysqli_fetch_assoc($list)) {
-            $fullname = $row['user_fullname'];
-            $user_id = $row['user_id'];
-            //$profile_picture = $row['profile_picture'];
-        ?>
-<a href="view_attendance.php?id=<?php echo $user_id; ?>">
-  <li class="user-item">
-    <img class="user-icon" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Icon">
-    <div class="user-name"><?php echo $fullname; ?></div>
-  </li>
-</a>
-        <?php } ?>
-    </ul>
+            if ($currentTime >= '06:00:00' && $currentTime < '12:00:00') {
+                $greeting = 'Good afternoon';
+            } elseif ($currentTime >= '12:00:00' && $currentTime < '18:00:00') {
+                $greeting = 'Good morning';
+            } else {
+                $greeting = 'Good evening';
+            }
+
+            echo $greeting . ', ' . $_SESSION['user_fullname'];
+            ?>
+        </span>
+    </div>
 
 
 </body>

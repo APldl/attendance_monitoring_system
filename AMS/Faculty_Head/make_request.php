@@ -116,14 +116,14 @@ mysqli_query($conn, $queryUpdateNewColumn);
       <thead>
         <tr>
           <th>Subject Code</th>
-          <th>Subject Units</th>
           <th>Schedule Date</th>
           <th>Section</th>
           <th>Start Time</th>
           <th>End Time</th>
           <th>Room</th>
           <th>Academic Year</th>
-          <th>Notes</th>
+          <th>Remarks</th>
+          <th>Reason</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -131,31 +131,37 @@ mysqli_query($conn, $queryUpdateNewColumn);
         <?php
         if (mysqli_num_rows($result) > 0) {
           while ($row = mysqli_fetch_assoc($result)) {
-                if (!empty($row['sub_professor'])) {
-                continue; // Skip the row if 'sub_professor' is not empty
-                }
-            echo "<tr>";
+            if (!empty($row['sub_professor'])) {
+              continue; // Skip the row if 'sub_professor' is not empty
+            }
+            $rowClass = ($row['status'] == 'approved' || $row['status'] == 'denied') ? 'readonly-row' : '';
+            echo "<tr class='$rowClass'>";
             echo "<td>" . $row['subject_code'] . "</td>";
-            echo "<td>" . $row['subject_units'] . "</td>";
-            echo "<td><input type='text' name='schedule_date[]' value='" . $row['schedule_date'] . "' class='short-input2'></td>";
-            echo "<td><input type='text' name='section[]' value='" . $row['section'] . "' class='short-input'></td>";
-            echo "<td><input type='text' name='schedule_time_start[]' value='" . $row['schedule_time_start'] . "' class='short-input'></td>";
-            echo "<td><input type='text' name='schedule_time_end[]' value='" . $row['schedule_time_end'] . "' class='short-input'></td>";
-            echo "<td><input type='text' name='room[]' value='" . $row['room'] . "' class='short-input3'></td>";
+            echo "<td><input type='text' name='schedule_date[]' value='" . $row['schedule_date'] . "' class='short-input2' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='section[]' value='" . $row['section'] . "' class='short-input' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='schedule_time_start[]' value='" . $row['schedule_time_start'] . "' class='short-input' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='schedule_time_end[]' value='" . $row['schedule_time_end'] . "' class='short-input' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='room[]' value='" . $row['room'] . "' class='short-input3' " . ($rowClass ? "readonly" : "") . "></td>";
             echo "<td>" . $row['academic_year'] . "</td>";
-            echo "<td><textarea name='notes[]' class='short-input'>" . $row['notes'] . "</textarea></td>";
-            echo "<td>
-              <select name='status[]'>
-                <option value='pending'". ($row['status'] == 'pending' ? " selected" : "") .">Pending</option>
-                <option value='approved'". ($row['status'] == 'approved' ? " selected" : "") .">Approved</option>
-                <option value='denied'". ($row['status'] == 'denied' ? " selected" : "") .">Denied</option>
-              </select>
-            </td>";
+            echo "<td><textarea name='notes[]' class='short-input' " . ($rowClass ? "readonly" : "") . ">" . $row['notes'] . "</textarea></td>";
+            echo "<td><textarea name='reason[]' class='short-input' readonly>" . $row['reason'] . "</textarea></td>";
+            echo "<td>";
+            if ($row['status'] == 'approved' || $row['status'] == 'denied') {
+              echo "<input type='text' value='" . ($row['status'] == 'approved' ? 'Approved' : 'Denied') . "' readonly class='short-input'>";
+              echo "<input type='hidden' name='status[]' value='" . $row['status'] . "'>";
+            } else {
+              echo "<select name='status[]'>
+                      <option value='pending'" . ($row['status'] == 'pending' ? " selected" : "") . ">Pending</option>
+                      <option value='approved'" . ($row['status'] == 'approved' ? " selected" : "") . ">Approved</option>
+                      <option value='denied'" . ($row['status'] == 'denied' ? " selected" : "") . ">Denied</option>
+                    </select>";
+            }
+            echo "</td>";
             echo "</tr>";
             echo "<input type='hidden' name='request_id[]' value='" . $row['request_id'] . "'>";
           }
         } else {
-          echo "<tr><td colspan='11'>No records found.</td></tr>";
+          echo "<tr><td colspan='10'>No records found.</td></tr>";
         }
         ?>
       </tbody>
@@ -164,7 +170,6 @@ mysqli_query($conn, $queryUpdateNewColumn);
     <button type="submit">Submit</button>
   </form>
 </div>
-
 
 <script>
 

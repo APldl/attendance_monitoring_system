@@ -86,11 +86,11 @@ require_once "connection.php";
   <title>Here is your class Schedule</title>
   <style>
     .container {
-      max-width: 870px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 10px;
       font-family: Arial, sans-serif;
-      margin-right: 200px; /* add margin to move the container to the right */
+      margin-right: 70px; /* add margin to move the container to the right */
     }
 
     .table {
@@ -114,55 +114,36 @@ require_once "connection.php";
     .table tr:nth-child(even) {
       background-color: #f2f2f2;
     }
+            .user-fullname {
+            margin-left: 300px;
+            font-size: 35px;
+            color: black;
+            font-weight: bold;
+        }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Class Schedule</h1>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Subject Code</th>
-          <th>Subject Units</th>
-          <th>Schedule Day</th>
-          <th>Section</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Room</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-          // Include database connection file
+  
 
-          // Retrieve data from database
-          $user_id = $_SESSION['user_id'];
-          $sql = "SELECT * FROM schedule WHERE user_id = '".$user_id."'";
-          $result = mysqli_query($conn, $sql);
+    <div id="unique-identifier">
+        <span class="user-fullname">
+            <?php
+            date_default_timezone_set('Your_Timezone'); // Replace 'Your_Timezone' with the desired timezone
+            $currentTime = date('H:i:s');
+            $greeting = '';
 
-          // Display data in table
-          if (mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-              echo "<tr>";
-              echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
-              echo "<td class='table__cell'>" . $row["subject_units"] . "</td>";
-              echo "<td class='table__cell'>" . $row["schedule_day"] . "</td>";
-              echo "<td class='table__cell'>" . $row["section"] . "</td>";
-              echo "<td class='table__cell'>" . $row["schedule_time_start"] . "</td>";
-              echo "<td class='table__cell'>" . $row["schedule_time_end"] . "</td>";
-              echo "<td class='table__cell'>" . $row["room"] . "</td>";
-              echo "</tr>";
+            if ($currentTime >= '06:00:00' && $currentTime < '12:00:00') {
+                $greeting = 'Good afternoon';
+            } elseif ($currentTime >= '12:00:00' && $currentTime < '18:00:00') {
+                $greeting = 'Good morning';
+            } else {
+                $greeting = 'Good evening';
             }
-          } else {
-            echo "<tr><td class='table__cell' colspan='7'>No schedule found.</td></tr>";
-          }
 
-          // Close database connection
-          mysqli_close($conn);
-        ?>
-      </tbody>
-    </table>
-  </div>
+            echo $greeting . ', ' . $_SESSION['user_fullname'];
+            ?>
+        </span>
+    </div>
 
 </body>
 </html>

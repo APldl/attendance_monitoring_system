@@ -112,101 +112,89 @@ mysqli_query($conn, $queryUpdateNewColumn);
   <h1>Substitution</h1>
 
   <form method="post" action="save_sub.php?id=<?php echo $user_id; ?>">
-<table id="scheduleTable" class="table">
-  <thead>
-    <tr>
-      <th>Subject Code</th>
-      <th>Subject Units</th>
-      <th>Schedule Date</th>
-      <th>Section</th>
-      <th>Start Time</th>
-      <th>End Time</th>
-      <th>Room</th>
-      <th>Academic Year</th>
-      <th>Substitute</th>
-      <th>Notes</th>
-      <th>Status</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-<?php
-if (mysqli_num_rows($result) > 0) {
-  while ($row = mysqli_fetch_assoc($result)) {
-    // Skip the row if 'sub_professor' column is empty
-    if (empty($row['sub_professor'])) {
-      continue;
-    }
-
-    echo "<tr>";
-    echo "<td><input type='text' name='subject_code[]' value='" . $row['subject_code'] . "' class='short-input'></td>";
-    echo "<td><input type='text' name='subject_units[]' value='" . $row['subject_units'] . "' class='short-input3'></td>";
-    echo "<td><input type='text' name='schedule_date[]' value='" . $row['schedule_date'] . "' class='short-input2'></td>";
-    echo "<td><input type='text' name='section[]' value='" . $row['section'] . "' class='short-input'></td>";
-    echo "<td><input type='text' name='schedule_time_start[]' value='" . $row['schedule_time_start'] . "' class='short-input'></td>";
-    echo "<td><input type='text' name='schedule_time_end[]' value='" . $row['schedule_time_end'] . "' class='short-input'></td>";
-    echo "<td><input type='text' name='room[]' value='" . $row['room'] . "' class='short-input3'></td>";
-    echo "<td>" . $row['academic_year'] . "</td>";
-    echo "<td>";
-    echo "<select name='substitute[]' class='short-input' onchange='adjustDropdownHeight(this)'>";
-
-    // Fetch substitute options from the user table
-    $substituteQuery = "SELECT user_fullname FROM user WHERE role_id = 1 AND school_department = 'School of Engineering'";
-    $substituteResult = mysqli_query($conn, $substituteQuery);
-
-    // Create an array to store the substitute options
-    $substituteOptions = array();
-
-    while ($substituteRow = mysqli_fetch_assoc($substituteResult)) {
-      $substituteOptions[] = $substituteRow['user_fullname'];
-    }
-
-    // Get the current value from the database
-    $currentSubstitute = $row['sub_professor'];
-
-    // Check if the current substitute is empty
-    if (empty($currentSubstitute)) {
-      // Set a default value or handle it according to your requirements
-      $currentSubstitute = "Default Value";
-      // You can also set the first option as selected if no current substitute value is available
-      // echo "<option value='' selected>Default Value</option>";
-    }
-
-    // Output the current value as the first option
-    echo "<option value='" . $currentSubstitute . "' selected>" . $currentSubstitute . "</option>";
-
-    // Output the remaining options
-    foreach ($substituteOptions as $substituteOption) {
-      if ($substituteOption !== $currentSubstitute) {
-        echo "<option value='" . $substituteOption . "'>" . $substituteOption . "</option>";
-      }
-    }
-
-    echo "</select>";
-    echo "</td>";
-    echo "<td><textarea name='notes[]'>" . $row['notes'] . "</textarea></td>";
-    echo "<td>
-      <select name='status[]'>
-        <option value='pending'" . ($row['status'] == 'pending' ? " selected" : "") . ">Pending</option>
-        <option value='approved'" . ($row['status'] == 'approved' ? " selected" : "") . ">Approved</option>
-        <option value='denied'" . ($row['status'] == 'denied' ? " selected" : "") . ">Denied</option>
-      </select>
-    </td>";
-    echo "<td><button type='button' class='delete-button' onclick='deleteRow(this)'>Delete</button></td>";
-    echo "</tr>";
-    echo "<input type='hidden' name='request_id[]' value='" . $row['request_id'] . "'>";
+    <table id="scheduleTable" class="table">
+      <thead>
+        <tr>
+          <th>Subject Code</th>
+          <th>Schedule Date</th>
+          <th>Section</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Room</th>
+          <th>Substitute</th> <!-- Updated: Placed Substitute column after Room column -->
+          <th>Academic Year</th>
+          <th>Remarks</th>
+          <th>Reason</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        if (mysqli_num_rows($result) > 0) {
+          while ($row = mysqli_fetch_assoc($result)) {
+            if (empty($row['sub_professor'])) {
+              continue; // Skip the row if 'sub_professor' is empty
+            }
+            $rowClass = ($row['status'] == 'approved' || $row['status'] == 'denied') ? 'readonly-row' : '';
+            echo "<tr class='$rowClass'>";
+            echo "<td>" . $row['subject_code'] . "</td>";
+            echo "<td><input type='text' name='schedule_date[]' value='" . $row['schedule_date'] . "' class='short-input2' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='section[]' value='" . $row['section'] . "' class='short-input' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='schedule_time_start[]' value='" . $row['schedule_time_start'] . "' class='short-input' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='schedule_time_end[]' value='" . $row['schedule_time_end'] . "' class='short-input' " . ($rowClass ? "readonly" : "") . "></td>";
+            echo "<td><input type='text' name='room[]' value='" . $row['room'] . "' class='short-input3' " . ($rowClass ? "readonly" : "") . "></td>";
+echo "<td>";
+if ($row['status'] == 'pending') {
+  echo "<select name='substitute[]' class='short-input' onchange='adjustDropdownHeight(this)'>";
+  $substituteQuery = "SELECT user_fullname FROM user WHERE role_id = 1 AND school_department = 'School of Engineering'";
+  $substituteResult = mysqli_query($conn, $substituteQuery);
+  $substituteOptions = array();
+  while ($substituteRow = mysqli_fetch_assoc($substituteResult)) {
+    $substituteOptions[] = $substituteRow['user_fullname'];
   }
+  $currentSubstitute = $row['sub_professor'];
+  if (empty($currentSubstitute)) {
+    $currentSubstitute = "Default Value";
+  }
+  echo "<option value='" . $currentSubstitute . "' selected>" . $currentSubstitute . "</option>";
+  foreach ($substituteOptions as $substituteOption) {
+    if ($substituteOption !== $currentSubstitute) {
+      echo "<option value='" . $substituteOption . "'>" . $substituteOption . "</option>";
+    }
+  }
+  echo "</select>";
 } else {
-  echo "<tr><td colspan='12'>No records found.</td></tr>";
+  echo "<input type='text' name='substitute[]' value='" . $row['sub_professor'] . "' class='short-input' " . ($rowClass ? "readonly" : "") . ">";
 }
-?>
-  </tbody>
-</table>
+echo "</td>";
+            echo "<td>" . $row['academic_year'] . "</td>";
+            echo "<td><textarea name='notes[]' class='short-input' " . ($rowClass ? "readonly" : "") . ">" . $row['notes'] . "</textarea></td>";
+            echo "<td><textarea name='reason[]' class='short-input' readonly></textarea></td>";
+            echo "<td>";
+            if ($row['status'] == 'approved' || $row['status'] == 'denied') {
+              echo "<input type='text' value='" . ($row['status'] == 'approved' ? 'Approved' : 'Denied') . "' readonly class='short-input'>";
+              echo "<input type='hidden' name='status[]' value='" . $row['status'] . "'>";
+            } else {
+              echo "<select name='status[]'>
+                      <option value='pending'" . ($row['status'] == 'pending' ? " selected" : "") . ">Pending</option>
+                      <option value='approved'" . ($row['status'] == 'approved' ? " selected" : "") . ">Approved</option>
+                      <option value='denied'" . ($row['status'] == 'denied' ? " selected" : "") . ">Denied</option>
+                    </select>";
+            }
+            echo "</td>";
+            echo "<input type='hidden' name='request_id[]' value='" . $row['request_id'] . "'>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='11'>No records found.</td></tr>";
+        }
+        ?>
+      </tbody>
+    </table>
 
     <button type="submit">Submit</button>
   </form>
 </div>
-
 
 <script>
 function deleteRequest(request_id) {

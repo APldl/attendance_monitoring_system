@@ -1,5 +1,6 @@
 <?php
 include "connection.php";
+include "attendance_generator.php";
 
 
     $user_id = $_SESSION['user_id'];
@@ -117,163 +118,181 @@ include "connection.php";
         <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User Profile Picture">
         <div class="details">
           <p><span class="not-bold">Faculty Name:</span> <span><?php echo $fullname; ?></span></p>
-          <p><span class="not-bold">Academic Year:</span> <span><?php echo $academic_year; ?></span></p>
+          <p><span class="not-bold">Current Academic Year:</span> <span><?php echo $academic_year; ?></span></p>
           <p><span class="not-bold">School Department:</span> <span><?php echo $school_department; ?></span></p>
         </div>
-        <form method="POST">
-          <label for="status">Month:</label>
-          <select id="status" name="status">
-            <option value=""></option>
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
-          </select>
-          <br>
-          <label for="date">Year</label>
-          <input type="text" id="year" name="year" size="2">
-          <br>
-          <button name="btn_search" type="submit">Search</button>
-        </form>
       </div>
     </div>
+
+    <!-- Button to open search tab -->
+    <button id="search-button">Filter Search</button>
+
+<!-- Search tab -->
+<div id="search-tab" style="display: none;">
+  <form action="" method="GET">
+    <label for="date-input">Select Exact Date:</label>
+    <input type="date" id="date-input" name="search_date">
+    <br>
+    <label for="month-input">Search by Month Only:</label>
+    <input type="month" id="month-input" name="search_month">
+    <br>
+    <label for="week-input">Search by Week:</label>
+    <input type="week" id="week-input" name="search_week">
+    <br>
+    <button type="submit" id="search-submit">Search</button>
+  </form>
+</div>
+
+
   </div>
 </div>
 
 <?php
-if (isset($_POST['btn_search'])) {
-  $month = mysqli_real_escape_string($conn, $_POST['status']);
-  $year = mysqli_real_escape_string($conn, $_POST['year']);
+$currentDate = date('Y-m-d');
 
-  if (empty($month) && empty($year)) {
-    $currentDate = date("Y-m-d"); // Get current date in the format "YYYY-MM-DD"
-
-    // Construct the SQL query to fetch attendance records for the current date
-    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND date = '$currentDate' ORDER BY date DESC";
-  } elseif (empty($year)) {
-    // Convert month string to numeric value
-    $month_num = date_parse($month)['month'];
-
-    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' ORDER BY date DESC";
-  } else {
-    // Convert month string to numeric value
-    $month_num = date_parse($month)['month'];
-
-    // Convert year string to numeric value
-    $year_num = intval($year);
-
-    $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND MONTH(date) = '$month_num' AND YEAR(date) = '$year_num' ORDER BY date DESC";
-  }
-
-  $result = mysqli_query($conn, $sql);
-  if (mysqli_num_rows($result) > 0) {
-    echo "<table>";
-    echo "<tr><th><a href='#' onclick='sortTable(0)'>Date</a></th><th><a href='#' onclick='sortTable(1)'>Subject Code</a></th><th><a href='#' onclick='sortTable(2)'>Room</a></th><th><a href='#' onclick='sortTable(3)'>Time In</a></th><th><a href='#' onclick='sortTable(4)'>Time Out</a></th><th><a href='#' onclick='sortTable(5)'>Schedule Time</a></th><th><a href='#' onclick='sortTable(6)'>Notes</a></th><th><a href='#' onclick='sortTable(7)'>Status</a></th></tr>";
-    while ($row = mysqli_fetch_assoc($result)) {
-      echo "<tr>";
-      echo "<td class='table__cell' style='width: 100px;'>" . date("Y-m-d", strtotime($row["date"])) . "</td>";
-      echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
-      echo "<td class='table__cell'>" . $row["room"] . "</td>";
-      echo "<td class='table__cell'>" . $row["Time_In"] . "</td>";
-      echo "<td class='table__cell'>" . $row["Time_Out"] . "</td>";
-      echo "<td class='table__cell'>" . $row["schedule_time"] . "</td>";
-      echo "<td class='table__cell'>" . $row["notes"] . "</td>";
-      echo "<td class='table__cell'>" . $row["status"] . "</td>";
-      echo "</tr>";
-    }
-    echo "</table>";
-    echo '<button class="download-button" onclick="downloadTable()">Download</button>';
-  } else {
-    echo "<p class='attendance-not-found'>No attendance found for the selected month and year.</p>";
-  }
-} else {
-  // No search button clicked, display records for current date by default
-  $currentDate = date("Y-m-d"); // Get current date in the format "YYYY-MM-DD"
-
-  // Construct the SQL query to fetch attendance records for the current date
-  $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status FROM faculty_attendance WHERE user_id = '$user_id' AND date = '$currentDate' ORDER BY date DESC";
+// Check if a specific date is submitted via the search form
+if (isset($_GET['search_date']) && !empty($_GET['search_date'])) {
+  // Get the submitted date
+  $searchDate = $_GET['search_date'];
   
-  $result = mysqli_query($conn, $sql);
-  if (mysqli_num_rows($result) > 0) {
-    echo "<table>";
-    echo "<tr><th><a href='#' onclick='sortTable(0)'>Date</a></th><th><a href='#' onclick='sortTable(1)'>Subject Code</a></th><th><a href='#' onclick='sortTable(2)'>Room</a></th><th><a href='#' onclick='sortTable(3)'>Time In</a></th><th><a href='#' onclick='sortTable(4)'>Time Out</a></th><th><a href='#' onclick='sortTable(5)'>Schedule Time</a></th><th><a href='#' onclick='sortTable(6)'>Notes</a></th><th><a href='#' onclick='sortTable(7)'>Status</a></th></tr>";
-    while ($row = mysqli_fetch_assoc($result)) {
-      echo "<tr>";
-      echo "<td class='table__cell' style='width: 100px;'>" . date("Y-m-d", strtotime($row["date"])) . "</td>";
-      echo "<td class='table__cell'>" . $row["subject_code"] . "</td>";
-      echo "<td class='table__cell'>" . $row["room"] . "</td>";
-      echo "<td class='table__cell'>" . $row["Time_In"] . "</td>";
-      echo "<td class='table__cell'>" . $row["Time_Out"] . "</td>";
-      echo "<td class='table__cell'>" . $row["schedule_time"] . "</td>";
-      echo "<td class='table__cell'>" . $row["notes"] . "</td>";
-      echo "<td class='table__cell'>" . $row["status"] . "</td>";
-      echo "</tr>";
-    }
-    echo "</table>";
-    echo '<button class="download-button" onclick="downloadTable()">Download</button>';
-  } else {
-    echo "<p class='attendance-not-found'>No attendance found for the selected month and year.</p>";
-  }
+  // Update the query to retrieve rows for the selected date
+  $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status, section, day FROM faculty_attendance WHERE user_id = '$user_id' AND date = '$searchDate' ORDER BY date DESC";
+} elseif (isset($_GET['search_month']) && !empty($_GET['search_month'])) {
+  // Get the submitted month
+  $searchMonth = $_GET['search_month'];
+  
+  // Get the start and end dates of the month
+  $startMonth = date('Y-m-01', strtotime($searchMonth));
+  $endMonth = date('Y-m-t', strtotime($searchMonth));
+  
+  // Update the query to retrieve rows for the selected month
+  $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status, section, day FROM faculty_attendance WHERE user_id = '$user_id' AND date BETWEEN '$startMonth' AND '$endMonth' ORDER BY date DESC";
+} elseif (isset($_GET['search_week']) && !empty($_GET['search_week'])) {
+  // Get the submitted week
+  $searchWeek = $_GET['search_week'];
+  
+  // Extract the year and week number from the submitted value
+  $year = date('Y', strtotime($searchWeek));
+  $week = date('W', strtotime($searchWeek));
+  
+  // Calculate the start and end dates of the week
+  $startDate = date('Y-m-d', strtotime($year . 'W' . $week));
+  $endDate = date('Y-m-d', strtotime($year . 'W' . $week . '7'));
+  
+  // Update the query to retrieve rows for the selected week
+  $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status, section, day FROM faculty_attendance WHERE user_id = '$user_id' AND date BETWEEN '$startDate' AND '$endDate' ORDER BY date DESC";
+} else {
+  // Query to retrieve rows for the current date
+  $sql = "SELECT date, subject_code, room, Time_In, Time_Out, schedule_time, notes, status, section, day FROM faculty_attendance WHERE user_id = '$user_id' AND date = '$currentDate' ORDER BY date DESC";
+}
+
+$result = mysqli_query($conn, $sql);
+
+if (!$result) {
+  die('Query failed: ' . mysqli_error($conn));
 }
 ?>
 
+<table id="attendance-table">
+  <thead>
+    <tr>
+      <th class="sortable" data-column="0">Date</th>
+      <th class="sortable" data-column="1">Day</th>
+      <th class="sortable" data-column="2">Subject</th>
+      <th class="sortable" data-column="3">Section</th>
+      <th class="sortable" data-column="4">Time</th>
+      <th class="sortable" data-column="5">Time-In</th>
+      <th class="sortable" data-column="6">Time-Out</th>
+      <th class="sortable" data-column="7">Room</th>
+      <th class="sortable" data-column="8">Status</th>
+      <th class="sortable" data-column="9">Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+<?php
+while ($row = mysqli_fetch_assoc($result)) {
+  echo "<tr>";
+  echo "<td>" . $row['date'] . "</td>";
+  echo "<td>" . $row['day'] . "</td>";
+  echo "<td>" . $row['subject_code'] . "</td>";
+  echo "<td>" . $row['section'] . "</td>";
+  echo "<td>" . $row['schedule_time'] . "</td>";
+  echo "<td>" . $row['Time_In'] . "</td>";
+  echo "<td>" . $row['Time_Out'] . "</td>";
+  echo "<td>" . $row['room'] . "</td>";
+  echo "<td>" . $row['status'] . "</td>";
+  echo "<td><textarea readonly>" . $row['notes'] . "</textarea></td>";
+  echo "</tr>";
+}
+
+// Check if no rows were retrieved
+if (mysqli_num_rows($result) === 0) {
+  echo "<tr><td colspan='10'>NO ATTENDANCE FOUND</td></tr>";
+}
+?>
+  </tbody>
+</table>
 
 <script>
-function sortTable(column) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementsByTagName("table")[0];
-  switching = true;
-  dir = "asc";
-  while (switching) {
-    switching = false;
-    rows = table.rows;
-    for (i = 1; i < (rows.length - 1); i++) {
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName("td")[column];
-      y = rows[i + 1].getElementsByTagName("td")[column];
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
+  // JavaScript code to show/hide the search tab
+  const searchButton = document.getElementById('search-button');
+  const searchTab = document.getElementById('search-tab');
+
+  searchButton.addEventListener('click', function() {
+    searchTab.style.display = 'block';
+  });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.sortable').click(function() {
+      const column = $(this).data('column');
+      sortTable(column);
+    });
+  });
+
+  function sortTable(column) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("attendance-table");
+    switching = true;
+    dir = "asc";
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("td")[column];
+        y = rows[i + 1].getElementsByTagName("td")[column];
+        if (dir == "asc") {
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
+        } else if (dir == "desc") {
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
         }
       }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount++;
-    } else {
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
         switching = true;
+        switchcount++;
+      } else {
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
       }
     }
   }
-}
 </script>
-
 
 
 </body>
 
-
-  <title>Attendance</title>
-  <style>
-
-  </style>
 </head>
 <body>
 

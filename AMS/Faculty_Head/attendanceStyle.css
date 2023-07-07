@@ -8,10 +8,14 @@
 body {
 	font-family: monserrat;
 }
-nav {
-	background: #043877;
-	height: 70px;
-	width: 100%;
+nav{
+  background: #043877;
+  height:70px;
+  width: 100%;
+  position: fixed;
+     top: 0;
+   z-index: 9999;
+
 }
 label.logo {
 	color: #E8C01F;
@@ -61,6 +65,7 @@ nav ul li a:hover {
 	height: 100%;
 	background: #343A40;
 	padding: 30px 0;
+	     top: 70;
 }
 
 .wrapper .sidebar h2 {
@@ -187,8 +192,9 @@ ul.log-out {
         }
         .wrapper2 {
             display: block;
-            margin: 20px auto;
-            max-width: 970px;
+            margin: 20px;
+            margin-top: 120px  !important;
+            max-width: 1068px;
             padding: 20px;
             background-color: #f0f0f0;
             border-radius: 10px;
@@ -228,16 +234,12 @@ ul.log-out {
 
 
 
-.button-class {
-  margin-left: 1165px; /* add this line */
+.save-button {
   background-color: #4CAF50;
-  border: none;
   color: white;
   padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin-top: 0px;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
+  margin-left: 1200px;
 }

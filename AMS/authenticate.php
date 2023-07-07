@@ -29,18 +29,18 @@
 
          if($_SESSION['user_role'] == 1){
        //header('Location: dashboard_faculty.php');
-       header('Location: Faculty_Member/dashboard_FM.php');
+       header('Location: Faculty_Member/dashboard_FM_Homepage.php');
      }else if($_SESSION['user_role'] == 2){
-       header('Location: Attendance_Checker/dashboard_AC.php');
+       header('Location: Attendance_Checker/dashboard_AC_Homepage.php');
      }else if($_SESSION['user_role'] == 3){
-       header('Location: Faculty_Encoder/dashboard_FE.php');
+       header('Location: Faculty_Encoder/dashboard_FE_Homepage.php');
      }else if($_SESSION['user_role'] == 4){
-       header('Location: Faculty_Head/dashboard_FH.php');
+       header('Location: Faculty_Head/dashboard_FH_Homepage.php');
      }else if($_SESSION['user_role'] == 5){
-       header('Location: Payroll/dashboard_PR.php');
+       header('Location: Payroll/dashboard_PR_Homepage.php');
        //wla pa folder
      }else if($_SESSION['user_role'] == 6){
-       header('Location: Admin/dashboard_AdminE.php');
+       header('Location: Admin/dashboard_Admin_Homepage.php');
        //wla pa folder
      } 
   }else {

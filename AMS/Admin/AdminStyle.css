@@ -378,3 +378,10 @@ ul.log-out {
       border: 1px solid black;
       padding: 0px;
     }
+
+              .user-fullname {
+            margin-left: 300px;
+            font-size: 35px;
+            color: black;
+            font-weight: bold;
+        }

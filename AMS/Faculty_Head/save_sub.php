@@ -2,33 +2,26 @@
 // Include database connection file
 require_once "connection.php";
 
-// Get user ID from query parameter
 $user_id = $_GET['id'];
 
 // Get form data
 $request_ids = $_POST['request_id'];
-$subject_codes = $_POST['subject_code'];
-$subject_units = $_POST['subject_units'];
 $schedule_dates = $_POST['schedule_date'];
 $sections = $_POST['section'];
 $schedule_time_starts = $_POST['schedule_time_start'];
 $schedule_time_ends = $_POST['schedule_time_end'];
 $rooms = $_POST['room'];
-$sub_professors = $_POST['substitute'];
+$substitutes = $_POST['substitute']; // Added 'substitute' array
+$statuses = $_POST['status'];
 $notes = $_POST['notes'];
-$statuses = $_POST['status']; // Added 'statuses' array to retrieve the 'status' values
 
 $error_messages = array();
+$success_messages = array();
 
 // Update or insert rows in the database
-for ($i = 0; $i < count($subject_codes); $i++) {
-  // Skip the row if all fields are empty
-  if (empty($subject_codes[$i]) && empty($subject_units[$i]) && empty($schedule_dates[$i]) && empty($sections[$i]) && empty($schedule_time_starts[$i]) && empty($schedule_time_ends[$i]) && empty($rooms[$i])) {
-    continue;
-  }
-
+for ($i = 0; $i < count($request_ids); $i++) {
   // Validate form data
-  if (empty($subject_codes[$i]) || empty($subject_units[$i]) || empty($schedule_dates[$i]) || empty($sections[$i]) || empty($schedule_time_starts[$i]) || empty($schedule_time_ends[$i]) || empty($rooms[$i])) {
+  if (empty($schedule_dates[$i]) || empty($sections[$i]) || empty($schedule_time_starts[$i]) || empty($schedule_time_ends[$i]) || empty($rooms[$i])) {
     $error_messages[] = "All fields are required.";
     continue;
   }
@@ -40,19 +33,23 @@ for ($i = 0; $i < count($subject_codes); $i++) {
 
   if (!empty($request_ids[$i])) {
     // Update existing row in the database
-    $stmt = $conn->prepare("UPDATE request SET subject_code=?, subject_units=?, schedule_date=?, section=?, schedule_time_start=?, schedule_time_end=?, room=?, sub_professor=?, notes=?, status=? WHERE request_id=?");
-    $stmt->bind_param("ssssssssssi", $subject_codes[$i], $subject_units[$i], $schedule_dates[$i], $sections[$i], $schedule_time_starts[$i], $schedule_time_ends[$i], $rooms[$i], $sub_professors[$i], $notes[$i], $statuses[$i], $request_ids[$i]);
-    $stmt->execute();
-    $message = "Schedule updated successfully.";
-    $stmt->close();
-  } else {
-    // Insert new row in the database
-    $stmt = $conn->prepare("INSERT INTO request (user_id, subject_code, subject_units, schedule_date, section, schedule_time_start, schedule_time_end, room, sub_professor, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssssss", $user_id, $subject_codes[$i], $subject_units[$i], $schedule_dates[$i], $sections[$i], $schedule_time_starts[$i], $schedule_time_ends[$i], $rooms[$i], $sub_professors[$i], $notes[$i], $statuses[$i]);
-    $stmt->execute();
-    $message = "Schedule added successfully.";
-    $stmt->close();
+    $status = in_array(strtolower($statuses[$i]), ['approved', 'denied']) ? strtolower($statuses[$i]) : 'pending';
+    $sql = "UPDATE request SET schedule_date='".$schedule_dates[$i]."', section='".$sections[$i]."', schedule_time_start='".$schedule_time_starts[$i]."', schedule_time_end='".$schedule_time_ends[$i]."', room='".$rooms[$i]."', sub_professor='".$substitutes[$i]."', status='".$status."', notes='".(!empty($notes[$i]) ? $notes[$i] : "")."' WHERE request_id=".$request_ids[$i];
+    mysqli_query($conn, $sql);
+
+    // Check if any changes were made
+    if (mysqli_affected_rows($conn) > 0) {
+      $success_messages[] = "Schedule with ID ".$request_ids[$i]." updated successfully.";
+    } else {
+      $success_messages[] = "No changes made for schedule with ID ".$request_ids[$i].".";
+    }
   }
+}
+
+if (mysqli_error($conn)) {
+  $error_message = "Error updating schedule: " . mysqli_error($conn);
+} elseif (isset($error_messages)) {
+  $error_message = implode("<br>", $error_messages);
 }
 
 // Set error message if there were issues with the form data
@@ -60,9 +57,9 @@ if (!empty($error_messages)) {
   $error_message = implode("<br>", $error_messages);
 }
 
-// Set message if there were no errors
-if (empty($error_messages)) {
-  $message = $message ?? "No changes made.";
+// Set success message if there were no errors
+if (!empty($success_messages)) {
+  $message = implode("<br>", $success_messages);
 }
 
 // Set error message if there was an issue with the database
@@ -70,14 +67,13 @@ if (mysqli_error($conn)) {
   $error_message = "Error updating schedule: " . mysqli_error($conn);
 }
 
-$redirectURL = "make_sub.php?id=$user_id";
 if (isset($error_message)) {
-  $redirectURL .= "&error_message=" . urlencode($error_message) . "&show_alert=1";
+  header("Location: make_sub.php?id=$user_id&error_message=$error_message&show_alert=1");
+} elseif (isset($message)) {
+  header("Location: make_request.php?id=$user_id&message=$message");
 } else {
-  $redirectURL .= "&message=" . urlencode($message);
+  $error_message = "No changes made.";
+  header("Location: make_sub.php?id=$user_id&error_message=$error_message&show_alert=1");
 }
-
-// Redirect to the appropriate URL
-header("Location: $redirectURL");
 exit();
 ?>

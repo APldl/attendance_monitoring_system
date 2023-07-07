@@ -16,6 +16,7 @@ $schedule_time_ends = $_POST['schedule_time_end'];
 $rooms = $_POST['room'];
 $sub_professors = $_POST['substitute'];
 $notes = $_POST['notes'];
+$reasons = $_POST['reason']; // Added field
 
 $error_messages = array();
 
@@ -39,15 +40,15 @@ for ($i = 0; $i < count($subject_codes); $i++) {
 
   if (!empty($request_ids[$i])) {
     // Update existing row in the database
-    $stmt = $conn->prepare("UPDATE request SET subject_code=?, subject_units=?, schedule_date=?, section=?, schedule_time_start=?, schedule_time_end=?, room=?, sub_professor=?, notes=? WHERE request_id=?");
-    $stmt->bind_param("sssssssssi", $subject_codes[$i], $subject_units[$i], $schedule_dates[$i], $sections[$i], $schedule_time_starts[$i], $schedule_time_ends[$i], $rooms[$i], $sub_professors[$i], $notes[$i], $request_ids[$i]);
+    $stmt = $conn->prepare("UPDATE request SET subject_code=?, subject_units=?, schedule_date=?, section=?, schedule_time_start=?, schedule_time_end=?, room=?, sub_professor=?, notes=?, reason=? WHERE request_id=?"); // Modified query
+    $stmt->bind_param("ssssssssssi", $subject_codes[$i], $subject_units[$i], $schedule_dates[$i], $sections[$i], $schedule_time_starts[$i], $schedule_time_ends[$i], $rooms[$i], $sub_professors[$i], $notes[$i], $reasons[$i], $request_ids[$i]); // Added parameter
     $stmt->execute();
     $message = "Schedule updated successfully.";
     $stmt->close();
   } else {
     // Insert new row in the database
-    $stmt = $conn->prepare("INSERT INTO request (user_id, subject_code, subject_units, schedule_date, section, schedule_time_start, schedule_time_end, room, sub_professor, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssss", $user_id, $subject_codes[$i], $subject_units[$i], $schedule_dates[$i], $sections[$i], $schedule_time_starts[$i], $schedule_time_ends[$i], $rooms[$i], $sub_professors[$i], $notes[$i]);
+    $stmt = $conn->prepare("INSERT INTO request (user_id, subject_code, subject_units, schedule_date, section, schedule_time_start, schedule_time_end, room, sub_professor, notes, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); // Modified query
+    $stmt->bind_param("sssssssssss", $user_id, $subject_codes[$i], $subject_units[$i], $schedule_dates[$i], $sections[$i], $schedule_time_starts[$i], $schedule_time_ends[$i], $rooms[$i], $sub_professors[$i], $notes[$i], $reasons[$i]); // Added parameter
     $stmt->execute();
     $message = "Schedule added successfully.";
     $stmt->close();

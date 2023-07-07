@@ -193,8 +193,8 @@ ul.log-out {
         .wrapper2 {
             display: block;
             margin: 20px;
-            margin-top: 120px  !important;
-            max-width: 1068px;
+            margin-top: 40px  !important;
+            max-width: 1170px;
             padding: 20px;
             background-color: #f0f0f0;
             border-radius: 10px;
@@ -206,8 +206,10 @@ ul.log-out {
         }
 
 
+
+
   table {
-    width: 70%;
+    width: 77%;
     border-collapse: collapse;
     margin-bottom: 20px;
     margin-left: 300px;
@@ -232,5 +234,58 @@ ul.log-out {
   margin-left: 300px;
 }
 
+  #download-button {
+  	 margin-left: 1355px;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
 
+    .dropdown {
+  position: relative;
+}
 
+.dropdown-toggle {
+  display: block;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #343A40;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #333;
+}
+
+.dropdown-content a:hover {
+  background-color: #343A40;
+}
+
+        .report_type {
+            display: block;
+            font-size: 25px;
+            max-width: 800px;
+            padding: 1px;
+            margin-left: 300px; /* add this line */
+            margin-top: 90px; /* add this line */
+        }
